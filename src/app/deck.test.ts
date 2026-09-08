@@ -5,7 +5,7 @@ import { chapters } from "../slides/chapters";
 import { createPresentationReducer, readLocation } from "./presentationState";
 
 test("deck opens with cover and agenda and has unique slide identifiers", () => {
-  assert.equal(slides.length, 36);
+  assert.equal(slides.length, 35);
   assert.deepEqual(
     slides.slice(0, 2).map((slide) => slide.kind),
     ["cover", "agenda"],
@@ -18,7 +18,7 @@ test("deck opens with cover and agenda and has unique slide identifiers", () => 
 });
 
 test("each chapter has one single-step introduction immediately before its content", () => {
-  assert.equal(slides.filter((slide) => slide.kind === "chapter").length, 6);
+  assert.equal(slides.filter((slide) => slide.kind === "chapter").length, 5);
   for (const chapter of chapters) {
     const index = slides.findIndex(
       (slide) => slide.id === `chapter-${chapter.number}`,
@@ -51,9 +51,20 @@ test("grid execution follows the code directly inside chapter four", () => {
     assert.equal(slide.kind, "content");
   }
   assert.equal(slides[codeIndex + 1].steps, 16);
-  assert.deepEqual(chapters.map(chapter => chapter.number), ["01", "02", "03", "04", "05", "06"]);
+  assert.deepEqual(chapters.map(chapter => chapter.number), ["01", "02", "03", "04", "05"]);
   assert.equal(slides.filter(slide => slide.kind === "chapter" && slide.title === "격자 실행").length, 0);
-  assert.equal(slides[codeIndex + 3].title, "코테에서 알아보기");
+  assert.equal(slides[codeIndex + 3].title, "정리");
+});
+
+test("selection criteria and recap share one final chapter without an extra divider", () => {
+  assert.deepEqual(slides.slice(-5).map(slide => slide.id),
+    ["chapter-05", "recognition", "comparison", "summary", "thanks"]);
+  for (const slide of slides.slice(-5)) {
+    assert.equal(slide.section, "05");
+    assert.equal(slide.sectionName, "정리");
+  }
+  assert.equal(slides.filter(slide => slide.kind === "chapter" && slide.title === "정리").length, 1);
+  assert.equal(slides.find(slide => slide.id === "recognition")?.steps, 5);
 });
 
 test("all actual slide steps and chapter boundaries support next/previous and URL restoration", () => {
