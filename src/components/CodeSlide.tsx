@@ -2,9 +2,8 @@ import { motion } from "framer-motion";
 import {
   javaSections,
   javaSteps,
-  GRID_CODE,
-  gridFocus,
-  gridNotes,
+  gridSections,
+  gridCodeSteps,
 } from "../slides/code";
 
 function Tokens({ line }: { line: string }) {
@@ -12,15 +11,15 @@ function Tokens({ line }: { line: string }) {
     <>
       {line
         .split(
-          /(\b(?:int|for|if|while|continue|new)\b|\b(?:dist|distance|pq|map|graph|now|currentDistance|nextNode|newDistance|nextCost|cur|edge)\b|\b\d+\b)/g,
+          /(\b(?:int|for|if|while|continue|break|new)\b|\b(?:dist|distance|minCost|pq|map|graph|now|currentDistance|currentCost|currentX|currentY|nextX|nextY|dx|dy|nextNode|newDistance)\b|\b\d+\b)/g,
         )
         .map((part, i) => (
           <span
             key={i}
             className={
-              /^(int|for|if|while|continue|new)$/.test(part)
+              /^(int|for|if|while|continue|break|new)$/.test(part)
                 ? "syntax-keyword"
-                : /^(dist|distance|pq|map|graph|now|currentDistance|nextNode|newDistance|nextCost)$/.test(part)
+                : /^(dist|distance|minCost|pq|map|graph|now|currentDistance|currentCost|currentX|currentY|nextX|nextY|dx|dy|nextNode|newDistance)$/.test(part)
                   ? "syntax-variable"
                   : /^\d+$/.test(part)
                     ? "syntax-number"
@@ -40,17 +39,18 @@ export function CodeSlide({
   step: number;
   grid?: boolean;
 }) {
-  const javaStep = javaSteps[step],
-    section = grid ? undefined : javaSections[javaStep.section],
-    code = grid ? GRID_CODE : section!.code,
-    focus = grid ? gridFocus[step] : javaStep.focus,
-    note = grid ? gridNotes[step] : javaStep.note;
+  const entry = (grid ? gridCodeSteps : javaSteps)[step],
+    sections = grid ? gridSections : javaSections,
+    section = sections[entry.section],
+    code = section.code,
+    focus = entry.focus,
+    note = entry.note;
   return (
-    <div className={`code-layout ${grid ? "" : "java-code-layout"}`}>
+    <div className="code-layout java-code-layout">
       <div className="code-surface">
         <div className="code-heading">
           <span>Java</span>
-          <span>{grid ? "SWEA 1249" : `${javaStep.section + 1} / 3 · ${section!.title}`}</span>
+          <span>{`${entry.section + 1} / ${sections.length} · ${section.title}`}</span>
         </div>
         <pre>
           <code>
@@ -80,16 +80,9 @@ export function CodeSlide({
         <h2>{note[1]}</h2>
         <p className="mono blue">{note[2]}</p>
         <p>{note[3]}</p>
-        {!grid && <div className="code-footnote">solution(n, start, roads) 핵심 발췌</div>}
-        {grid && (
-          <div className="code-footnote">
-            PQ는 cost 오름차순
-            <br />
-            dr = {"{ −1, 0, 1, 0 }"}
-            <br />
-            dc = {"{ 0, 1, 0, −1 }"}
-          </div>
-        )}
+        <div className="code-footnote">
+          {grid ? "SWEA 1249 핵심 발췌" : "solution(n, start, roads) 핵심 발췌"}
+        </div>
       </motion.div>
     </div>
   );

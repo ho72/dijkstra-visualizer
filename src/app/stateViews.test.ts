@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { CalculationView, PriorityQueueView } from "../components/StateViews";
-import { allGridSteps, graphSteps, graphPresentationSteps } from "../dijkstra/snapshots";
+import { allGridSteps, graphSteps, graphPresentationSteps, gridSteps, finalGrid } from "../dijkstra/snapshots";
 
 test("pending PQ records never receive a stale label or strike-through class", () => {
   for (const snapshot of [...graphSteps, ...allGridSteps]) {
@@ -28,4 +28,13 @@ test("the popped candidate is only classified after the cost comparison", () => 
       assert.match(markup, /건너뛰기/);
     }
   }
+});
+
+test("grid views name minCost and do not claim that early termination emptied the PQ", () => {
+  const initial = renderToStaticMarkup(createElement(CalculationView, { snapshot: gridSteps[0], grid: true }));
+  assert.match(initial, /minCost\[0\]\[0\] = 0/);
+  const completed = renderToStaticMarkup(createElement(CalculationView, { snapshot: finalGrid, grid: true }));
+  assert.match(completed, /목적지 최소 비용 확정/);
+  assert.match(completed, /PQ에 후보가 남아도 종료/);
+  assert.doesNotMatch(completed, /PQ = ∅|모든 유효 후보 탐색 완료/);
 });

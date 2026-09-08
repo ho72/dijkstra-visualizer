@@ -84,53 +84,91 @@ export const javaSteps = [
     note: ["08", "갱신하고 PQ에 추가", "{nextNode, newDistance}", "더 작은 비용을 distance에 기록하고 새 후보를 넣는다. PQ에 남은 이전 기록은 그대로 둔다."],
   },
 ];
-export const GRID_CODE = [
-  "for (int[] row : dist) Arrays.fill(row, INF);",
-  "dist[0][0] = 0;",
-  "pq.offer(new Cell(0, 0, 0));",
+const GRID_INIT_CODE = [
+  "int[] dx = {-1, 1, 0, 0};",
+  "int[] dy = {0, 0, -1, 1};",
+  "Queue<int[]> pq = new PriorityQueue<>(",
+  "    (a, b) -> Integer.compare(a[2], b[2]));",
   "",
+  "int[][] minCost = new int[N][N];",
+  "for (int i = 0; i < N; i++) {",
+  "    Arrays.fill(minCost[i], Integer.MAX_VALUE);",
+  "}",
+  "minCost[0][0] = 0;",
+  "pq.offer(new int[] {0, 0, 0});",
+];
+const GRID_POLL_CODE = [
   "while (!pq.isEmpty()) {",
-  "    Cell cur = pq.poll();",
-  "    if (cur.cost > dist[cur.r][cur.c]) continue;",
-  "    for (int d = 0; d < 4; d++) {",
-  "        int nr = cur.r + dr[d];",
-  "        int nc = cur.c + dc[d];",
-  "        if (nr < 0 || nr >= N || nc < 0 || nc >= N)",
+  "    int[] current = pq.poll();",
+  "    int currentX = current[0];",
+  "    int currentY = current[1];",
+  "    int currentCost = current[2];",
+  "    if (currentCost > minCost[currentX][currentY]) {",
+  "        continue;",
+  "    }",
+  "",
+  "    if (currentX == N - 1 && currentY == N - 1) {",
+  "        break;",
+  "    }",
+  "    // 이어서 상하좌우 탐색",
+];
+const GRID_NEIGHBOR_CODE = [
+  "    for (int dir = 0; dir < 4; dir++) {",
+  "        int nextX = currentX + dx[dir];",
+  "        int nextY = currentY + dy[dir];",
+  "        if (nextX < 0 || nextX >= N ||",
+  "            nextY < 0 || nextY >= N) {",
   "            continue;",
-  "        int nextCost = cur.cost + map[nr][nc];",
-  "        if (nextCost < dist[nr][nc]) {",
-  "            dist[nr][nc] = nextCost;",
-  "            pq.offer(new Cell(nr, nc, nextCost));",
+  "        }",
+  "        int cost = map[nextX][nextY];",
+  "        int newDistance = currentCost + cost;",
+  "        if (newDistance < minCost[nextX][nextY]) {",
+  "            minCost[nextX][nextY] = newDistance;",
+  "            pq.offer(new int[] {",
+  "                nextX, nextY, newDistance});",
   "        }",
   "    }",
   "}",
 ];
-export const gridFocus = [
-  [0, 2],
-  [5, 6],
-  [7, 11],
-  [12, 12],
-  [13, 15],
+export const gridSections = [
+  { title: "좌표와 초기화", code: GRID_INIT_CODE },
+  { title: "최소 후보와 종료 조건", code: GRID_POLL_CODE },
+  { title: "while문 안의 상하좌우 탐색", code: GRID_NEIGHBOR_CODE },
 ];
-export const gridNotes = [
-  [
-    "01",
-    "시작점 초기화",
-    "dist[0][0] = 0",
-    "시작점에서 복구 비용 0으로 출발한다.",
-  ],
-  ["02", "최소 후보 선택", "pq.poll()", "오래된 후보는 건너뛴다."],
-  ["03", "상하좌우 탐색", "(nr, nc)", "격자 범위를 벗어나는 좌표는 제외한다."],
-  [
-    "04",
-    "도착할 칸의 비용",
-    "cur.cost + map[nr][nc]",
-    "현재 칸이 아니라 이동할 칸의 값을 더한다.",
-  ],
-  [
-    "05",
-    "최소 비용 갱신",
-    "nextCost < dist[nr][nc]",
-    "더 작으면 갱신하고 PQ에 추가한다.",
-  ],
+export const GRID_CODE = gridSections.flatMap((section, i) =>
+  i === 0 ? section.code : ["", ...section.code],
+);
+export const gridCodeSteps = [
+  {
+    section: 0, focus: [0, 3],
+    note: ["01", "좌표와 우선순위 큐", "{x, y, 누적 비용}", "x는 행, y는 열이다. PQ는 배열의 [2]를 비교해 누적 비용이 작은 후보부터 꺼낸다."],
+  },
+  {
+    section: 0, focus: [5, 10],
+    note: ["02", "최소 비용표 초기화", "distance[v]\nminCost[x][y]", "정점별 거리 배열이 2차원으로 바뀐다. 시작 칸은 0, 나머지는 무한대로 초기화한다."],
+  },
+  {
+    section: 1, focus: [0, 4],
+    note: ["03", "최소 후보 꺼내기", "currentX, currentY\ncurrentCost", "current[0], [1]은 좌표이고 [2]는 PQ에 넣을 당시의 누적 복구 비용이다."],
+  },
+  {
+    section: 1, focus: [5, 7],
+    note: ["04", "오래된 후보 검사", "currentCost >\nminCost[currentX][currentY]", "꺼낸 비용이 최신 비용보다 크면 건너뛴다. 목적지 확인도 이 검사 다음에 한다."],
+  },
+  {
+    section: 1, focus: [9, 11],
+    note: ["05", "목적지에서 종료", "(N - 1, N - 1)", "목적지를 유효한 최소 후보로 꺼냈으므로 비용이 확정된다. PQ에 후보가 남아 있어도 종료한다."],
+  },
+  {
+    section: 2, focus: [0, 6],
+    note: ["06", "상하좌우 탐색", "currentX + dx[dir]\ncurrentY + dy[dir]", "인접 리스트 대신 방향 배열로 이웃을 구한다. 지도 밖의 좌표는 제외한다."],
+  },
+  {
+    section: 2, focus: [7, 9],
+    note: ["07", "이동할 칸의 비용", "currentCost + cost", "cost는 map[nextX][nextY]다. 다음 칸에 들어가는 비용을 더해 기존 최소 비용과 비교한다."],
+  },
+  {
+    section: 2, focus: [10, 12],
+    note: ["08", "갱신하고 PQ에 추가", "{nextX, nextY, newDistance}", "더 작은 값을 minCost에 기록하고 새 후보를 넣는다. 최종 답은 minCost[N-1][N-1]이다."],
+  },
 ];

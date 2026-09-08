@@ -100,6 +100,14 @@ export function CalculationView({
   grid?: boolean;
 }) {
   const c = snapshot.calculation;
+  if (snapshot.termination === "target")
+    return (
+      <div className="calculation">
+        <span className="label">목적지 최소 비용 확정</span>
+        <strong>{snapshot.currentCost}</strong>
+        <p>PQ에 후보가 남아도 종료</p>
+      </div>
+    );
   if (snapshot.phase === "poll")
     return (
       <div className="calculation poll-calculation">
@@ -133,7 +141,7 @@ export function CalculationView({
         </span>
         <strong>
           {snapshot.phase === "init"
-            ? "dist[start] = 0"
+            ? grid ? "minCost[0][0] = 0" : "dist[start] = 0"
             : snapshot.phase === "complete"
               ? "PQ = ∅"
               : snapshot.currentCost}

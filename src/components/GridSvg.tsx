@@ -329,7 +329,7 @@ export function GridSvg({
           })}
       <text x="350" y="646" textAnchor="middle" fontSize="28" fill="#5c718e">
         {showDist
-          ? "큰 숫자 = 현재 dist"
+          ? "큰 숫자 = 현재 minCost"
           : wave >= 0
             ? "숫자 = 시작점에서의 이동 횟수"
             : "숫자 = 해당 칸의 복구 시간"}

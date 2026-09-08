@@ -26,9 +26,9 @@ export const GRID = [
 ];
 export const DIRECTIONS = [
   [-1, 0],
-  [0, 1],
   [1, 0],
   [0, -1],
+  [0, 1],
 ] as const;
 export const coordinate = (node: number, size = GRID.length) =>
   `(${Math.floor(node / size)}, ${node % size})`;

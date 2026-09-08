@@ -5,11 +5,26 @@ import type { DijkstraStep } from "./types";
 export const graphSteps = runDijkstra(GRAPH_NODES, GRAPH_EDGES, 1);
 const grid = gridGraph(GRID);
 export const allGridSteps = runDijkstra(grid.nodes, grid.edges, 0);
-// The introductory grid run shows each selection and successful update. The
-// full inspection trace stays available in allGridSteps for validation.
-export const gridSteps = allGridSteps.filter((s) =>
+// Stop the teaching trace at the target's valid minimum pop, matching the
+// supplied Java break condition. Keep the full run for independent validation.
+const gridTargetIndex = allGridSteps.findIndex(s =>
+  s.phase === "select" && s.currentNode === GRID.length ** 2 - 1,
+);
+const targetSelected = allGridSteps[gridTargetIndex];
+export const gridSteps: DijkstraStep[] = allGridSteps.slice(0, gridTargetIndex + 1).filter((s) =>
   ["init", "select", "relax-success", "complete"].includes(s.phase),
 );
+gridSteps.push({
+  ...targetSelected,
+  id: "grid-target-complete",
+  phase: "complete",
+  termination: "target",
+  dist: { ...targetSelected.dist },
+  queue: targetSelected.queue.map(entry => ({ ...entry })),
+  settled: [...targetSelected.settled],
+  previous: { ...targetSelected.previous },
+  message: "목적지 (2,2)의 최소 복구 비용 3이 확정됐다. PQ에 후보가 남아 있어도 종료한다.",
+});
 export const initial = graphSteps[0];
 export const afterOne = graphSteps.find(
   (s) =>
@@ -62,7 +77,7 @@ export const staleStep = graphSteps.find(
   (s) => s.phase === "stale" && s.currentNode === 4,
 )!;
 export const finalGraph = graphSteps.at(-1)!;
-export const finalGrid = allGridSteps.at(-1)!;
+export const finalGrid = gridSteps.at(-1)!;
 export const graphPath = recoverPath(finalGraph, 6);
 export const gridPath = recoverPath(finalGrid, GRID.length ** 2 - 1);
 export const phaseLabels = {

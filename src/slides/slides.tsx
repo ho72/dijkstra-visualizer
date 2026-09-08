@@ -301,7 +301,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
           />
         </div>
         <ExecutionState snapshot={s} grid />
-        <p className="execution-message">{s.message}</p>
+        <p className="execution-message">{s.message.replace(/\bdist\b/g, "minCost")}</p>
       </div>
     );
   }
@@ -311,7 +311,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
         <GridSvg snapshot={finalGrid} path={gridPath} showDist />
         <div className="grid-result-copy">
           <span className="label">최소 복구 시간</span>
-          <code>dist[N−1][N−1]</code>
+          <code>minCost[N−1][N−1]</code>
           <div className="answer-cost">3</div>
           <p className="sum-equation">1 + 1 + 1 + 0 = 3</p>
           <div className="grid-path">
@@ -466,10 +466,10 @@ function Transform({ step }: { step: number }) {
       </div>
       <div className="transform-map">
         {[
-          ["Node", "(row, col)"],
+          ["Node", "(x, y)"],
           ["Edge", "상 / 하 / 좌 / 우"],
-          ["Weight", "map[nr][nc]"],
-          ["dist[node]", "dist[row][col]"],
+          ["Weight", "map[nextX][nextY]"],
+          ["distance[v]", "minCost[x][y]"],
         ].map(([a, b], i) => (
           <Reveal key={a} show={step >= i + 1}>
             <span>{a}</span>
@@ -505,7 +505,7 @@ function GridMapping({ step }: { step: number }) {
         <Reveal show={step >= 3}>
           <div className="entry-cost">
             <span className="label">이동할 때 더하는 비용</span>
-            <code>cur.cost + map[nr][nc]</code>
+            <code>currentCost + map[nextX][nextY]</code>
             <p>다음 칸에 들어가는 비용을 더한다.</p>
           </div>
         </Reveal>

@@ -13,6 +13,8 @@ import {
   finalGraph,
   finalGrid,
   gridPath,
+  gridSteps,
+  allGridSteps,
 } from "./snapshots";
 
 test("the directed reference graph has all eight exact edges and the expected result", () => {
@@ -175,6 +177,27 @@ test("grid weights come from the destination and the example cost is 3", () => {
       .reduce((sum, n) => sum + GRID[Math.floor(n / 3)][n % 3], 0),
     3,
   );
+});
+test("the grid presentation ends at a valid target pop and preserves pending candidates", () => {
+  assert.equal(gridSteps.length, 16);
+  const selected = gridSteps.at(-2)!;
+  assert.equal(selected.phase, "select");
+  assert.equal(selected.currentNode, 8);
+  assert.equal(selected.currentCost, selected.dist[8]);
+  assert.equal(finalGrid.termination, "target");
+  assert.equal(finalGrid.phase, "complete");
+  assert.deepEqual(finalGrid.queue, selected.queue);
+  assert.deepEqual(finalGrid.dist, selected.dist);
+  assert.deepEqual(finalGrid.settled, selected.settled);
+  assert.notEqual(finalGrid.queue, selected.queue);
+  assert.notEqual(finalGrid.dist, selected.dist);
+  assert.equal(finalGrid.queue.length, 3);
+  assert.ok(finalGrid.settled.length < 9);
+  assert.deepEqual(gridSteps.slice(0, -1), allGridSteps
+    .slice(0, allGridSteps.indexOf(selected) + 1)
+    .filter(s => ["init", "select", "relax-success"].includes(s.phase)));
+  assert.equal(allGridSteps.at(-1)!.queue.length, 0);
+  assert.equal(allGridSteps.at(-1)!.dist[8], finalGrid.dist[8]);
 });
 test("zero costs, cycles, isolated vertices, and singleton grids terminate correctly", () => {
   const s = runDijkstra(

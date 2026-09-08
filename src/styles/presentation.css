@@ -1584,7 +1584,7 @@ code {
 }
 .transform-map > div {
   display: grid;
-  grid-template-columns: 195px 35px 1fr;
+  grid-template-columns: 220px 35px 1fr;
   gap: 14px;
   padding: 29px 0;
   border-bottom: 1px solid var(--line);

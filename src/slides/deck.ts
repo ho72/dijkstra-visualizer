@@ -1,6 +1,6 @@
 import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
 import { chapters } from "./chapters";
-import { javaSteps } from "./code";
+import { javaSteps, gridCodeSteps } from "./code";
 
 export type SlideDefinition = {
   id: string;
@@ -170,8 +170,8 @@ const contentSlides = [
     id: "grid-code",
     section: "04",
     sectionName: "보급로에 적용",
-    title: "인접 간선 대신 상하좌우를 확인한다",
-    steps: 5,
+    title: "Java 코드로 보는 보급로",
+    steps: gridCodeSteps.length,
   },
   {
     id: "grid-execution",
@@ -184,7 +184,7 @@ const contentSlides = [
     id: "grid-result",
     section: "05",
     sectionName: "격자 실행",
-    title: "목적지의 dist가 최소 복구 시간이다",
+    title: "목적지의 minCost가 최소 복구 시간이다",
     steps: 1,
   },
   {

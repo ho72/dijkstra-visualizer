@@ -32,5 +32,6 @@ export type DijkstraStep = {
   settled: number[];
   previous: Record<number, number | null>;
   calculation?: Calculation;
+  termination?: "target";
   message: string;
 };
