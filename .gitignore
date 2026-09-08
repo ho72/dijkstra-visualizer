@@ -3,6 +3,7 @@
 
 # Repository/build metadata required by the deployed app.
 !/.gitignore
+!/README.md
 !/.openai/
 !/.openai/hosting.json
 !/index.html
