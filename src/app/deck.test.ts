@@ -5,12 +5,16 @@ import { chapters } from "../slides/chapters";
 import { createPresentationReducer, readLocation } from "./presentationState";
 
 test("deck opens with cover and agenda and has unique slide identifiers", () => {
-  assert.equal(slides.length, 36);
+  assert.equal(slides.length, 37);
   assert.deepEqual(
     slides.slice(0, 2).map((slide) => slide.kind),
     ["cover", "agenda"],
   );
   assert.equal(new Set(slides.map((slide) => slide.id)).size, slides.length);
+  assert.deepEqual(slides.slice(-2).map(slide => slide.id), ["summary", "thanks"]);
+  assert.equal(slides.at(-1)?.title, "감사합니다.");
+  assert.equal(slides.at(-1)?.kind, "closing");
+  assert.equal(slides.at(-1)?.steps, 1);
 });
 
 test("each chapter has one single-step introduction immediately before its content", () => {

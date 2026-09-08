@@ -250,7 +250,7 @@ export function Presentation() {
               transition={{ duration: reduced ? 0 : 0.2 }}
               aria-label={slide.title}
             >
-              {slide.kind !== "cover" && slide.kind !== "chapter" && (
+              {!["cover", "chapter", "closing"].includes(slide.kind) && (
                 <h1 className="slide-title">{slide.title}</h1>
               )}
               <SlideContent id={slide.id} step={step} />

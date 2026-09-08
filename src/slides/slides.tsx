@@ -39,6 +39,12 @@ const GraphToGridScene = lazy(() => import("../three/GraphToGridScene"));
 
 export { slides } from "./deck";
 export function SlideContent({ id, step }: { id: string; step: number }) {
+  if (id === "thanks")
+    return (
+      <div className="closing-content">
+        <h1>감사합니다<span className="title-dot">.</span></h1>
+      </div>
+    );
   if (id === "agenda") return <AgendaSlide />;
   if (id.startsWith("chapter-")) return <ChapterSlide number={id.slice(8)} />;
   if (id === "candidates") return <AlgorithmCandidates step={step} />;

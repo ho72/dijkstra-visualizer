@@ -90,6 +90,19 @@ button:disabled {
   position: absolute;
   inset: 147px 96px 117px;
 }
+.closing-content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.closing-content h1 {
+  margin: 0;
+  font-size: 132px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -6px;
+}
 .slide-title {
   font-size: 53px;
   line-height: 1.25;

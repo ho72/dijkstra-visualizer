@@ -8,7 +8,7 @@ export type SlideDefinition = {
   sectionName: string;
   title: string;
   steps: number;
-  kind: "cover" | "agenda" | "chapter" | "content";
+  kind: "cover" | "agenda" | "chapter" | "content" | "closing";
 };
 
 const contentSlides = [
@@ -208,6 +208,13 @@ const contentSlides = [
     title: "문제의 모양보다 비용 구조를 보자",
     steps: 1,
   },
+  {
+    id: "thanks",
+    section: "07",
+    sectionName: "정리",
+    title: "감사합니다.",
+    steps: 1,
+  },
 ];
 
 // Derive chapter boundaries and the agenda from the same ordered chapter list.
@@ -215,7 +222,7 @@ export const slides: SlideDefinition[] = contentSlides.flatMap(
   (slide, index) => {
     const content: SlideDefinition = {
       ...slide,
-      kind: index === 0 ? "cover" : "content",
+      kind: index === 0 ? "cover" : slide.id === "thanks" ? "closing" : "content",
     };
     if (index === 0) {
       return [
