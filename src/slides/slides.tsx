@@ -1,4 +1,5 @@
 import { IntroGrid } from "../components/IntroGrid";
+import { DijkstraOverview, DistLesson, SettlementLesson, StaleLesson } from "../components/DijkstraLessons";
 import { AgendaSlide, ChapterSlide } from "../components/ChapterSlides";
 import {
   AlgorithmCandidates,
@@ -22,16 +23,13 @@ import { Icon } from "../components/Icon";
 import { coordinate, GRID } from "../dijkstra/graph";
 import {
   afterOne,
-  initial,
   firstRelax,
   failedRelax,
-  secondRelax,
-  staleStep,
   finalGraph,
   finalGrid,
   graphPath,
   gridPath,
-  graphSteps,
+  graphPresentationSteps,
   gridSteps,
 } from "../dijkstra/snapshots";
 import roadImage from "../../SWEA_1249_codex_bundle/references/road_depth_reference.png";
@@ -191,54 +189,9 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
       </div>
     );
   if (id === "choice") return <AlgorithmChoice step={step} />;
-  if (id === "idea")
-    return (
-      <div className="idea-scene">
-        <GraphSvg
-          snapshot={
-            step === 0
-              ? afterOne
-              : {
-                  ...afterOne,
-                  currentNode: 3,
-                  phase: "select",
-                  activeEdge: undefined,
-                }
-          }
-          showDist
-        />
-        <div className="idea-candidates">
-          {[
-            { node: 2, cost: 3 },
-            { node: 3, cost: 2 },
-            { node: 4, cost: 5 },
-          ].map((c) => (
-            <div
-              key={c.node}
-              className={step >= 1 && c.node === 3 ? "selected-candidate" : ""}
-            >
-              <span>정점 {c.node}</span>
-              <strong>{c.cost}</strong>
-              {step >= 1 && c.node === 3 && <small>최소 → 다음 선택</small>}
-            </div>
-          ))}
-        </div>
-        <p className="bottom-message">
-          정점 번호가 아니라 <strong>누적 비용</strong>을 기준으로 선택한다.
-        </p>
-      </div>
-    );
-  if (id === "dist")
-    return (
-      <div className="dist-scene">
-        <GraphSvg snapshot={step === 0 ? initial : afterOne} showDist />
-        <DistView snapshot={step === 0 ? initial : afterOne} />
-        <p className="bottom-message">
-          <code>dist[v]</code> = 시작점에서 v까지 현재까지 알고 있는 가장 싼
-          비용
-        </p>
-      </div>
-    );
+  if (id === "idea") return <DijkstraOverview step={step} />;
+  if (id === "dist") return <DistLesson step={step} />;
+  if (id === "settlement") return <SettlementLesson step={step} />;
   if (id === "pq")
     return (
       <div className="pq-scene">
@@ -252,6 +205,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
             }
             large
           />
+          <p className="lesson-footnote">후보 = (정점, 기록한 누적 비용)</p>
         </div>
         <div className="pq-explanation">
           <span className="label">최소 누적 비용</span>
@@ -267,73 +221,52 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
               </div>
             </div>
           </Reveal>
-          <p>가장 작은 후보가 먼저 나온다.</p>
+          <p>처리할 후보는 PQ에,<br />최신 최선의 비용은 dist에 기록한다.</p>
         </div>
       </div>
     );
   if (id === "execution") {
-    const s = graphSteps[step];
+    const s = graphPresentationSteps[step];
+    const focus = s.id === afterOne.id ? "1번의 이웃 세 곳을 기록"
+      : s.phase === "select" ? `정점 ${s.currentNode} 선택·확정`
+      : s.phase === "relax-success" ? `dist[${s.calculation!.to}] 갱신 + PQ 추가`
+      : s.phase === "relax-fail" ? `dist[${s.calculation!.to}] 유지`
+      : s.phase === "stale" ? "오래된 기록 건너뛰기"
+      : s.phase === "init" ? "dist와 PQ 초기화" : "최종 비용 확인";
     return (
       <div className="execution-scene">
         <div className="execution-main">
+          <p className="execution-focus">{focus}</p>
           <GraphSvg
             snapshot={s}
-            showDist
             path={s.phase === "complete" ? graphPath : []}
           />
           <DistView snapshot={s} />
         </div>
         <ExecutionState snapshot={s} />
         <p className="execution-message">
-          {s.id === afterOne.id ? "다음에는 어떤 정점을 선택할까?" : s.message}
+          {s.id === afterOne.id ? "1번에서 이웃 2·3·4의 비용 3·2·5를 기록한다. 다음 최소 후보는?" : s.message}
         </p>
       </div>
     );
   }
-  if (["relaxation", "no-update", "second-relaxation"].includes(id))
+  if (["relaxation", "no-update"].includes(id))
     return (
       <>
         <RelaxationVisual
           snapshot={
-            id === "relaxation"
-              ? firstRelax
-              : id === "no-update"
-                ? failedRelax
-                : secondRelax
+            id === "relaxation" ? firstRelax : failedRelax
           }
           step={step}
         />
         <p className="bottom-message focus-caption">
           {id === "relaxation"
-            ? "처음 발견한 경로가 최종 경로라는 보장은 없다."
-            : id === "no-update"
-              ? "기존 최소 비용은 그대로 유지한다."
-              : "더 저렴한 경로가 발견될 때마다 갱신한다."}
+            ? step >= 2 ? "dist[4]를 4로 갱신하고, 새 후보 (4, 4)를 PQ에 추가한다." : "기존 경로 1→4는 비용 5. 새 경로 1→3→4는?"
+            : "새 비용이 기존 값 이상이면 dist를 유지하고, PQ에도 추가하지 않는다."}
         </p>
       </>
     );
-  if (id === "stale")
-    return (
-      <div className="stale-scene">
-        <div className="stale-old">
-          <span className="label">PQ에서 꺼낸 후보</span>
-          <div className={`stale-entry ${step >= 1 ? "dismissed" : ""}`}>
-            <b>정점 4</b>
-            <strong>5</strong>
-            <span>오래된 후보</span>
-          </div>
-        </div>
-        <span className="stale-greater">&gt;</span>
-        <div className="stale-current">
-          <span className="label">현재 dist[4]</span>
-          <strong>{staleStep.dist[4]}</strong>
-        </div>
-        <Reveal show={step >= 1} className="stale-code">
-          <code>if (cur.cost &gt; dist[cur.node]) continue;</code>
-          <p>더 좋은 비용이 이미 기록되어 있으므로 건너뛴다.</p>
-        </Reveal>
-      </div>
-    );
+  if (id === "stale") return <StaleLesson step={step} />;
   if (id === "graph-result")
     return (
       <div className="result-scene">
@@ -479,7 +412,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
 
 function Cycle({ step }: { step: number }) {
   const lines = [
-    ["01", "PQ 최소값 선택", "pq.poll()"],
+    ["01", "최소 후보 꺼내기", "pq.poll()"],
     ["02", "인접 정점 확인", "graph[cur.node]"],
     ["03", "새 누적 비용 계산", "cur.cost + edge.cost"],
   ];
@@ -491,6 +424,7 @@ function Cycle({ step }: { step: number }) {
             <span className="label">{n}</span>
             <h3>{title}</h3>
             <code>{code}</code>
+            {i === 0 && <p className="cycle-hint">오래된 기록이면 건너뛰기</p>}
             {i < 2 && <span className="cycle-arrow">→</span>}
           </Reveal>
         ))}
@@ -512,7 +446,7 @@ function Cycle({ step }: { step: number }) {
       </Reveal>
       <Reveal show={step >= 4}>
         <div className="cycle-repeat">
-          ↶ <span>PQ가 빌 때까지 반복</span>
+          <span>모든 이웃에 대해 비교한 뒤, 다음 PQ 후보를 꺼낸다.<br />PQ가 빌 때까지 반복한다.</span>
         </div>
       </Reveal>
     </div>

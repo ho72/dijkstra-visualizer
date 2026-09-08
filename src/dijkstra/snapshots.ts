@@ -16,6 +16,15 @@ export const afterOne = graphSteps.find(
     s.activeEdge?.[0] === 1 &&
     s.activeEdge[1] === 4,
 )!;
+// Group the first vertex's three initial updates into one event. Keep every
+// subsequent selection, update, rejected route and stale entry in time order.
+// The complete inspect/relax trace remains unchanged in graphSteps.
+export const graphPresentationSteps = graphSteps.filter(
+  (s, index) =>
+    s.phase === "init" ||
+    s.id === afterOne.id ||
+    (index > graphSteps.indexOf(afterOne) && s.phase !== "inspect"),
+);
 export const firstRelax = graphSteps.find(
   (s) =>
     s.phase === "relax-success" &&

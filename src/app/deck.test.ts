@@ -54,3 +54,11 @@ test("all actual slide steps and chapter boundaries support next/previous and UR
   assert.equal(state.index, slides.length - 1);
   assert.deepEqual(reduce(state, { type: "next" }), state);
 });
+
+test("Dijkstra teaches the rules before the complete walkthrough without repeating relaxation", () => {
+  assert.deepEqual(
+    slides.filter(slide => slide.section === "03" && slide.kind === "content").map(slide => slide.id),
+    ["idea", "dist", "pq", "cycle", "relaxation", "no-update", "settlement", "stale", "execution", "graph-result", "java"],
+  );
+  assert.equal(slides.find(slide => slide.id === "execution")!.steps, 15);
+});

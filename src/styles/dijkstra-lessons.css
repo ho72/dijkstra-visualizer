@@ -1,0 +1,41 @@
+.dijkstra-overview {
+  display: grid;
+  grid-template-columns: 1060px 1fr;
+  column-gap: 55px;
+  align-items: center;
+  padding-top: 35px;
+}
+.dijkstra-overview > .graph-svg { height: 550px; width: 100%; }
+.dijkstra-overview > .bottom-message { grid-column: 1 / -1; margin-top: 25px; }
+.lesson-copy h2 { font-size: 42px; line-height: 1.45; margin: 20px 0; letter-spacing: -1px; }
+.lesson-copy p { font-size: 32px; line-height: 1.65; color: var(--muted); }
+.lesson-copy .blue { color: var(--blue); }
+.lesson-candidates { display: flex; gap: 20px; margin-top: 20px; }
+.lesson-candidates > div { flex: 1; border-bottom: 3px solid var(--line); padding: 15px 0; text-align: center; }
+.lesson-candidates span { display: block; font-size: 28px; color: var(--muted); }
+.lesson-candidates strong { display: block; font: 48px var(--mono); margin-top: 18px; }
+.lesson-candidates .chosen { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.lesson-footnote { font-size: 28px; line-height: 1.55; color: var(--muted); margin-top: 25px; }
+.dist-definition { font-size: 30px; }
+.settlement-lesson { padding: 85px 65px 0; }
+.settlement-comparison { display: grid; grid-template-columns: 540px 1fr; gap: 100px; }
+.settlement-comparison > div + div { border-left: 1px solid var(--line); padding-left: 85px; }
+.settlement-comparison h2 { font-size: 36px; font-weight: 600; margin: 22px 0; }
+.settlement-comparison p { font-size: 32px; line-height: 1.6; margin: 22px 0; }
+.settlement-cost { display: block; font: 120px var(--mono); color: var(--blue); }
+.settlement-formula { display: flex; align-items: center; gap: 40px; height: 138px; }
+.settlement-formula b { font: 70px var(--mono); color: var(--blue); }
+.settlement-formula span { font: 46px var(--mono); color: var(--muted); }
+.settlement-conclusion { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 32px; }
+.settlement-conclusion > strong { font-size: 36px; color: var(--blue); }
+.settlement-conclusion p { font-size: 29px; color: var(--muted); margin: 22px 0 0; }
+.stale-lesson { display: grid; grid-template-columns: 660px 1fr; gap: 45px 100px; padding: 60px 75px 0; }
+.stale-lesson .pq-view { margin-top: 25px; }
+.stale-lesson .lesson-copy { padding-top: 20px; }
+.stale-explanation { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 28px; text-align: center; }
+.stale-explanation > strong { font-size: 38px; color: var(--orange); }
+.stale-explanation code { display: block; font-size: 31px; margin-top: 22px; color: var(--blue); }
+.stale-explanation p { font-size: 30px; color: var(--muted); margin: 20px 0 0; }
+.cycle-hint { font-size: 26px; color: var(--muted); margin: 18px 0 0; }
+.cycle-scene .cycle-decision { margin-top: 35px; }
+.cycle-scene .cycle-repeat { font-size: 31px; text-align: center; line-height: 1.6; margin-top: 26px; }

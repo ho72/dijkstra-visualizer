@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 import { Icon } from "../components/Icon";
 import { slides, SlideContent } from "../slides/slides";
-import { graphSteps, gridSteps } from "../dijkstra/snapshots";
+import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
 import { createPresentationReducer, readLocation } from "./presentationState";
 import type { Action } from "./presentationState";
 
@@ -161,7 +161,7 @@ export function Presentation() {
     if (!playing) return;
     const snapshot =
       slide.id === "execution"
-        ? graphSteps[step]
+        ? graphPresentationSteps[step]
         : slide.id === "grid-execution"
           ? gridSteps[step]
           : undefined;
@@ -184,12 +184,11 @@ export function Presentation() {
         onPointerMove={reveal}
         onPointerDown={reveal}
       >
-        <motion.main
-          layoutRoot
+        <main
           ref={stageRef}
           tabIndex={-1}
           className="stage"
-          style={{ x: "-50%", y: "-50%", scale }}
+          style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
           aria-label="SWEA 1249 보급로 발표"
           data-slide={slide.id}
           data-step={step}
@@ -367,7 +366,7 @@ export function Presentation() {
               {notice}
             </div>
           )}
-        </motion.main>
+        </main>
       </div>
     </MotionConfig>
   );

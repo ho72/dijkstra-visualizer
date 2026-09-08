@@ -347,8 +347,8 @@ button:disabled {
 }
 .presenter-controls {
   position: absolute;
-  bottom: 96px;
-  right: 92px;
+  bottom: 20px;
+  right: 280px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -834,18 +834,28 @@ code {
   width: 137px;
   text-align: center;
   border-left: 1px solid var(--line);
-  padding: 12px 0;
+  padding: 5px 0;
 }
 .dist-cell > span {
   display: block;
   font-size: 26px;
   color: #62758f;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
+  line-height: 1;
 }
 .dist-cell strong {
+  display: block;
   font: 34px var(--mono);
   font-weight: 500;
   color: #3f5e87;
+  line-height: 1.1;
+}
+.dist-cell small {
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+  margin-top: 2px;
+  color: #476747;
 }
 .dist-cell.dist-changed {
   background: #e7f3eb;
@@ -871,7 +881,7 @@ code {
   grid-template-columns: 630px 1fr;
   gap: 190px;
   align-items: center;
-  padding: 95px 95px 0;
+  padding: 65px 95px 0;
 }
 .pq-focus h2 {
   font-family: var(--mono);
@@ -888,12 +898,21 @@ code {
   padding: 0 18px 15px;
 }
 .pq-rows {
-  min-height: 70px;
+  position: relative;
+  height: calc(var(--pq-slots) * var(--pq-row-height));
+  isolation: isolate;
+}
+.pq-view {
+  --pq-row-height: 66px;
 }
 .pq-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--pq-row-height);
   padding: 13px 20px;
   border-bottom: 1px solid #e6ecf3;
   font: 32px var(--mono);
@@ -919,13 +938,13 @@ code {
   padding-left: 17px;
 }
 .pq-stale {
-  color: #9a9d9f;
+  color: #76664f;
   background: transparent;
   border-left-color: #c6cbd3;
   text-decoration: line-through;
 }
 .pq-stale small {
-  color: #9b8d7b;
+  color: #76664f;
 }
 .pq-empty {
   font-size: 28px;
@@ -935,6 +954,9 @@ code {
 .pq-large .pq-heading {
   font-size: 30px;
   padding: 0 24px 23px;
+}
+.pq-large {
+  --pq-row-height: 106px;
 }
 .pq-large .pq-row {
   font-size: 43px;
@@ -1004,7 +1026,14 @@ code {
   min-width: 0;
 }
 .execution-main > .graph-svg {
-  height: 530px;
+  height: 468px;
+}
+.execution-focus {
+  font-size: 31px;
+  color: var(--blue);
+  text-align: center;
+  margin: 0 0 10px;
+  height: 45px;
 }
 .execution-main .dist-strip {
   height: 105px;
@@ -1074,6 +1103,9 @@ code {
   min-height: 52px;
   padding-top: 8px;
   padding-bottom: 7px;
+}
+.execution-state .pq-view {
+  --pq-row-height: 54px;
 }
 .execution-state .pq-row small {
   top: 14px;

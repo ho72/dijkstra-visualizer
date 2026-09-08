@@ -136,7 +136,7 @@ export function GraphSvg({
                 x={x}
                 y={y + 11}
                 textAnchor="middle"
-                fontSize="34"
+                fontSize="40"
                 fontWeight="500"
                 fill={active || onPath ? colors[state] : "#52657e"}
               >
@@ -188,12 +188,12 @@ export function GraphSvg({
                   x={x}
                   y={y - 102}
                   textAnchor="middle"
-                  fontSize="27"
+                  fontSize="30"
                   fill="#5e728e"
                 >
                   dist[{node}]
                 </text>
-                <AnimatePresence mode="popLayout" initial={false}>
+                <AnimatePresence initial={false}>
                   <motion.text
                     key={snapshot?.dist[node] ?? "inf"}
                     x={x}

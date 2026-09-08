@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
+import type { CSSProperties } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { DijkstraStep, QueueEntry } from "../dijkstra/types";
 import { phaseLabels } from "../dijkstra/snapshots";
 import { coordinate } from "../dijkstra/graph";
@@ -6,7 +7,7 @@ import { coordinate } from "../dijkstra/graph";
 export function AnimatedValue({ value }: { value: number | null | undefined }) {
   return (
     <span className="animated-value">
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence initial={false}>
         <motion.span
           key={value ?? "infinity"}
           initial={{ opacity: 0, y: 12 }}
@@ -24,27 +25,37 @@ export function PriorityQueueView({
   queue,
   grid = false,
   large = false,
+  reservedSlots = large ? 3 : 4,
 }: {
   queue: QueueEntry[];
   grid?: boolean;
   large?: boolean;
+  reservedSlots?: number;
 }) {
+  const reduced = useReducedMotion();
   return (
-    <div className={`pq-view ${large ? "pq-large" : ""}`}>
+    <div
+      className={`pq-view ${large ? "pq-large" : ""}`}
+      style={{ "--pq-slots": Math.max(reservedSlots, queue.length, 1) } as CSSProperties}
+    >
       <div className="pq-heading">
         <span>{grid ? "좌표" : "정점"}</span>
         <span>누적 비용</span>
       </div>
       <div className="pq-rows">
-        <AnimatePresence initial={false} mode="popLayout">
+        {/* Rows use local slots, never viewport-based layout projection. This
+            stays stable inside the scaled presentation, including exit cleanup. */}
+        <AnimatePresence initial={false}>
           {queue.map((entry, i) => (
             <motion.div
-              layout
               key={entry.id}
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -32 }}
-              transition={{ duration: 0.35 }}
+              data-queue-entry={entry.id}
+              data-queue-node={entry.node}
+              data-queue-cost={entry.cost}
+              initial={{ opacity: 0, y: `${i * 100}%` }}
+              animate={{ opacity: 1, y: `${i * 100}%` }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduced ? 0 : 0.28, ease: "easeInOut" }}
               className={`pq-row ${i === 0 ? "pq-min" : ""} ${entry.stale ? "pq-stale" : ""}`}
             >
               <span>{grid ? coordinate(entry.node) : entry.node}</span>
@@ -66,13 +77,14 @@ export function DistView({ snapshot }: { snapshot: DijkstraStep }) {
       <div className="dist-name">dist</div>
       {Object.entries(snapshot.dist).map(([node, cost]) => (
         <div
-          className={`dist-cell ${snapshot.calculation?.to === Number(node) && snapshot.phase === "relax-success" ? "dist-changed" : ""}`}
+          className={`dist-cell ${snapshot.calculation?.to === Number(node) && snapshot.phase === "relax-success" ? "dist-changed" : ""} ${snapshot.settled.includes(Number(node)) ? "dist-settled" : ""}`}
           key={node}
         >
           <span>{node}</span>
           <strong>
             <AnimatedValue value={cost} />
           </strong>
+          {snapshot.settled.includes(Number(node)) && <small>확정</small>}
         </div>
       ))}
     </div>
@@ -104,7 +116,7 @@ export function CalculationView({
             ? "시작점 초기화"
             : snapshot.phase === "complete"
               ? "모든 유효 후보 탐색 완료"
-              : "현재 누적 비용"}
+              : "이 정점의 최소 비용 확정"}
         </span>
         <strong>
           {snapshot.phase === "init"
@@ -165,7 +177,7 @@ export function ExecutionState({
         </b>
       </div>
       <h3>Priority Queue</h3>
-      <PriorityQueueView queue={snapshot.queue} grid={grid} />
+      <PriorityQueueView queue={snapshot.queue} grid={grid} reservedSlots={grid ? 4 : 3} />
       <CalculationView snapshot={snapshot} grid={grid} />
     </aside>
   );

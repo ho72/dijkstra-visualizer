@@ -4,6 +4,7 @@ import { runDijkstra, recoverPath } from "./runDijkstra";
 import { GRAPH_NODES, GRAPH_EDGES, gridGraph, GRID } from "./graph";
 import {
   graphSteps,
+  graphPresentationSteps,
   afterOne,
   firstRelax,
   failedRelax,
@@ -44,6 +45,31 @@ test("PQ chooses node 3 (cost 2) before node 2 (cost 3)", () => {
   assert.equal(next.phase, "select");
   assert.equal(next.currentNode, 3);
   assert.equal(next.currentCost, 2);
+});
+test("presentation events retain every decision after the grouped initialization", () => {
+  assert.equal(graphSteps.length, 26);
+  assert.equal(graphPresentationSteps.length, 15);
+  assert.equal(graphPresentationSteps[0], graphSteps[0]);
+  assert.equal(graphPresentationSteps[1], afterOne);
+  assert.equal(graphPresentationSteps.at(-1), finalGraph);
+  assert.ok([firstRelax, failedRelax, secondRelax, staleStep].every(s => graphPresentationSteps.includes(s)));
+  assert.deepEqual(
+    graphPresentationSteps.slice(2),
+    graphSteps.slice(graphSteps.indexOf(afterOne) + 1).filter(s => s.phase !== "inspect"),
+  );
+});
+
+test("settled labels mean a valid minimum was popped, not merely enqueued", () => {
+  assert.ok(!afterOne.settled.includes(4));
+  assert.ok(!firstRelax.settled.includes(4));
+  for (let i = 1; i < graphSteps.length; i++) {
+    const s = graphSteps[i], previous = graphSteps[i - 1];
+    if (s.phase === "select") {
+      assert.equal(s.currentCost, s.dist[s.currentNode!]);
+      assert.deepEqual(s.settled, [...previous.settled, s.currentNode]);
+    } else assert.deepEqual(s.settled, previous.settled);
+    for (const node of previous.settled) assert.equal(s.dist[node], previous.dist[node]);
+  }
 });
 test("first relaxation, failed update, second relaxation, and stale candidates match the narrative", () => {
   assert.deepEqual(

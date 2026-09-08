@@ -1,4 +1,4 @@
-import { graphSteps, gridSteps } from "../dijkstra/snapshots";
+import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
 import { chapters } from "./chapters";
 
 export type SlideDefinition = {
@@ -78,15 +78,15 @@ const contentSlides = [
     id: "idea",
     section: "03",
     sectionName: "다익스트라 알고리즘",
-    title: "현재까지 비용이 가장 작은 정점부터 탐색한다",
-    steps: 2,
+    title: "예제 목표와 최소 비용 후보",
+    steps: 3,
   },
   {
     id: "dist",
     section: "03",
     sectionName: "다익스트라 알고리즘",
     title: "dist는 현재까지 발견한 최소 비용이다",
-    steps: 2,
+    steps: 3,
   },
   {
     id: "pq",
@@ -96,11 +96,11 @@ const contentSlides = [
     steps: 2,
   },
   {
-    id: "execution",
+    id: "cycle",
     section: "03",
     sectionName: "다익스트라 알고리즘",
-    title: "하나의 그래프로, 한 단계씩 실행해보자",
-    steps: graphSteps.length,
+    title: "후보 하나를 꺼낸 뒤 하는 일",
+    steps: 5,
   },
   {
     id: "relaxation",
@@ -117,10 +117,10 @@ const contentSlides = [
     steps: 3,
   },
   {
-    id: "second-relaxation",
+    id: "settlement",
     section: "03",
     sectionName: "다익스트라 알고리즘",
-    title: "더 좋은 경로를 찾으면 다시 갱신할 수 있다",
+    title: "최소 비용 후보를 확정할 수 있는 이유",
     steps: 3,
   },
   {
@@ -128,7 +128,14 @@ const contentSlides = [
     section: "03",
     sectionName: "다익스트라 알고리즘",
     title: "PQ에는 오래된 비용의 후보도 남아 있다",
-    steps: 2,
+    steps: 3,
+  },
+  {
+    id: "execution",
+    section: "03",
+    sectionName: "다익스트라 알고리즘",
+    title: "배운 규칙으로 전체 실행 따라가기",
+    steps: graphPresentationSteps.length,
   },
   {
     id: "graph-result",
@@ -136,13 +143,6 @@ const contentSlides = [
     sectionName: "다익스트라 알고리즘",
     title: "1에서 6까지의 최소 비용은 11이다",
     steps: 1,
-  },
-  {
-    id: "cycle",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "다익스트라는 같은 과정을 반복한다",
-    steps: 5,
   },
   {
     id: "java",
