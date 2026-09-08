@@ -26,6 +26,14 @@ button:disabled {
   height: 100%;
   position: relative;
   overflow: hidden;
+  display: flex;
+}
+.stage-viewport {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
 }
 .stage {
   width: 1920px;

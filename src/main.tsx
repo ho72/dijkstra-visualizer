@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Presentation } from "./app/Presentation";
 import "./styles/tokens.css";
 import "./styles/presentation.css";
+import "./styles/slide-navigator.css";
 import "./styles/interaction.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

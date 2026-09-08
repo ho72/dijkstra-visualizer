@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -6,6 +6,8 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { Icon } from "../components/Icon";
+import { SlideNavigator } from "../components/SlideNavigator";
+import { fitStage } from "./navigation";
 import { slides, SlideContent } from "../slides/slides";
 import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
 import { createPresentationReducer, readLocation } from "./presentationState";
@@ -25,11 +27,12 @@ export function Presentation() {
   const [scale, setScale] = useState(1);
   const [help, setHelp] = useState(false);
   const [notice, setNotice] = useState("");
-  const [fullscreenActive, setFullscreenActive] = useState(false);
+  const [fullscreenActive, setFullscreenActive] = useState(() => Boolean(document.fullscreenElement));
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigationAt = useRef(-Infinity);
   const stageRef = useRef<HTMLElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const helpRef = useRef<HTMLButtonElement>(null);
   const reduced = useReducedMotion();
   const slide = slides[index];
@@ -38,14 +41,22 @@ export function Presentation() {
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setVisible(false), 2800);
   }, []);
-  useEffect(() => {
-    const resize = () =>
-      setScale(Math.min(window.innerWidth / 1920, window.innerHeight / 1080));
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const resize = () => setScale(fitStage(viewport.clientWidth, viewport.clientHeight));
     resize();
-    reveal();
+    const observer = new ResizeObserver(resize);
+    observer.observe(viewport);
     window.addEventListener("resize", resize);
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", resize);
+    };
+  }, []);
+  useEffect(() => {
+    reveal();
+    return () => {
       if (timer.current) clearTimeout(timer.current);
       if (noticeTimer.current) clearTimeout(noticeTimer.current);
     };
@@ -85,12 +96,22 @@ export function Presentation() {
     }
   }, []);
   useEffect(() => {
-    const update = () =>
-      setFullscreenActive(Boolean(document.fullscreenElement));
+    const update = () => {
+      const active = Boolean(document.fullscreenElement);
+      if (active && document.activeElement?.closest(".slide-navigator")) {
+        stageRef.current?.focus({ preventScroll: true });
+      }
+      setFullscreenActive(active);
+    };
     update();
     document.addEventListener("fullscreenchange", update);
     return () => document.removeEventListener("fullscreenchange", update);
   }, []);
+  const selectSlide = useCallback((index: number) => {
+    dispatch({ type: "jump", index });
+    stageRef.current?.focus({ preventScroll: true });
+    reveal();
+  }, [reveal]);
   const closeHelp = useCallback(() => {
     setHelp(false);
     stageRef.current?.focus({ preventScroll: true });
@@ -104,7 +125,7 @@ export function Presentation() {
   }, [help]);
   useEffect(() => {
     const keydown = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return;
       const key = event.key.toLowerCase();
       if (help) {
         if (key === "escape" || key === "?") {
@@ -119,7 +140,9 @@ export function Presentation() {
       }
       if (
         event.target instanceof HTMLElement &&
-        event.target.matches('input,textarea,select,[contenteditable="true"]')
+        (event.target.matches('input,textarea,select,[contenteditable="true"]') ||
+          (event.target.closest(".slide-navigator") && !["f", "?"].includes(key)) ||
+          (key === " " && event.target.closest('button,a[href],[role="button"]')))
       )
         return;
       if (
@@ -183,8 +206,20 @@ export function Presentation() {
         className={`presentation ${visible ? "controls-visible" : ""}`}
         onPointerMove={reveal}
         onPointerDown={reveal}
+        data-fullscreen={fullscreenActive}
       >
+        {!fullscreenActive && (
+          <SlideNavigator
+            slides={slides}
+            activeIndex={index}
+            disabled={help}
+            onSelect={selectSlide}
+            onPresent={() => void fullscreen()}
+          />
+        )}
+        <div className="stage-viewport" ref={viewportRef}>
         <main
+          id="presentation-stage"
           ref={stageRef}
           tabIndex={-1}
           className="stage"
@@ -367,6 +402,7 @@ export function Presentation() {
             </div>
           )}
         </main>
+        </div>
       </div>
     </MotionConfig>
   );
