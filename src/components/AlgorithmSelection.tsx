@@ -1,8 +1,10 @@
 import { algorithmChoices } from "../slides/algorithmChoices";
 import { Reveal } from "./ConceptVisuals";
 import { Icon } from "./Icon";
+import { motion } from "framer-motion";
 
 export function AlgorithmCandidates({ step }: { step: number }) {
+  const complete = step >= algorithmChoices.length;
   return (
     <div className="algorithm-candidates">
       <p className="selection-lead">
@@ -16,20 +18,24 @@ export function AlgorithmCandidates({ step }: { step: number }) {
           </tr>
         </thead>
         <tbody>
-          {algorithmChoices.map((algorithm) => (
-            <tr
+          {algorithmChoices.map((algorithm, index) => (
+            <motion.tr
               key={algorithm.id}
+              initial={false}
+              animate={{ opacity: step >= index ? 1 : 0 }}
+              transition={{ duration: 0.35 }}
+              aria-hidden={step < index}
               className={
-                step >= 1 && algorithm.id === "bfs" ? "candidate-bfs" : ""
+                complete && algorithm.id === "bfs" ? "candidate-bfs" : ""
               }
             >
               <th scope="row">{algorithm.name}</th>
               <td>{algorithm.purpose}</td>
-            </tr>
+            </motion.tr>
           ))}
         </tbody>
       </table>
-      <Reveal show={step >= 1} className="selection-takeaway">
+      <Reveal show={complete} hiddenOpacity={0} className="selection-takeaway">
         격자와 상하좌우 이동을 보면 <strong>BFS</strong>가 떠오른다.
       </Reveal>
     </div>

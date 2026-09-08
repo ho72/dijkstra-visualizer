@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import { Icon } from "../components/Icon";
 import { SlideNavigator } from "../components/SlideNavigator";
+import { AutomaticReveal } from "../components/AutomaticReveal";
 import { fitStage } from "./navigation";
 import { slides, SlideContent } from "../slides/slides";
 import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
@@ -253,7 +254,13 @@ export function Presentation() {
               {!["cover", "chapter", "closing"].includes(slide.kind) && (
                 <h1 className="slide-title">{slide.title}</h1>
               )}
-              <SlideContent id={slide.id} step={step} />
+              {slide.autoRevealStages ? (
+                <AutomaticReveal stages={slide.autoRevealStages}>
+                  {(stage) => <SlideContent id={slide.id} step={stage} />}
+                </AutomaticReveal>
+              ) : (
+                <SlideContent id={slide.id} step={step} />
+              )}
             </motion.section>
           </AnimatePresence>
           <footer className="slide-footer">

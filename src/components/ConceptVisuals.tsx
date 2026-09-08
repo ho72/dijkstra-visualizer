@@ -6,16 +6,18 @@ export function Reveal({
   show,
   children,
   className = "",
+  hiddenOpacity = 0.14,
 }: {
   show: boolean;
   children: React.ReactNode;
   className?: string;
+  hiddenOpacity?: number;
 }) {
   return (
     <motion.div
       className={className}
       initial={false}
-      animate={{ opacity: show ? 1 : 0.14, y: show ? 0 : 8 }}
+      animate={{ opacity: show ? 1 : hiddenOpacity, y: show ? 0 : 8 }}
       transition={{ duration: 0.35 }}
       aria-hidden={!show}
     >

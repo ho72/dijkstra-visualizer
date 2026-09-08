@@ -41,6 +41,29 @@ test("selection introduces candidates and graph interpretation before BFS and it
   );
 });
 
+test("only pages 05, 06, 08, 09 and 10 reveal automatically with no manual steps", () => {
+  const automatic = slides.filter(slide => slide.autoRevealStages !== undefined);
+  assert.deepEqual(automatic.map(slide => slides.indexOf(slide) + 1), [5, 6, 8, 9, 10]);
+  assert.deepEqual(automatic.map(slide => slide.id),
+    ["rules", "objective", "candidates", "interpretation", "bfs"]);
+  assert.deepEqual(automatic.map(slide => slide.autoRevealStages), [3, 3, 6, 4, 4]);
+  const lengths = slides.map(slide => slide.steps);
+  const reduce = createPresentationReducer(lengths);
+  for (const slide of automatic) {
+    const index = slides.indexOf(slide);
+    assert.equal(slide.steps, 1);
+    // Old shared step URLs are normalized to the single navigable state.
+    const state = readLocation(`?scene=${index + 1}&step=4`, lengths);
+    assert.equal(state.step, 0);
+    assert.equal(reduce(state, { type: "next" }).index, index + 1);
+    assert.equal(reduce(state, { type: "previous" }).index, index - 1);
+    assert.deepEqual(reduce(state, { type: "play" }), state);
+    assert.deepEqual(reduce(state, { type: "tick" }), state);
+  }
+  assert.equal(slides.find(slide => slide.id === "counterexample")?.steps, 3);
+  assert.equal(slides.find(slide => slide.id === "choice")?.steps, 4);
+});
+
 test("grid execution follows the code directly inside chapter four", () => {
   const codeIndex = slides.findIndex(slide => slide.id === "grid-code");
   assert.deepEqual(slides.slice(codeIndex, codeIndex + 3).map(slide => slide.id),

@@ -4,6 +4,7 @@ async (page) => {
   const originalUrl = page.url();
   const origin = await page.evaluate(() => location.origin);
   await page.setViewportSize({ width: 960, height: 540 });
+  // Entry-only animations show their complete content in thumbnail captures.
   await page.emulateMedia({ reducedMotion: "reduce" });
   const slides = await page.locator(".navigator-slide").evaluateAll(buttons =>
     buttons.map((button, index) => ({ id: button.dataset.slideId, scene: index + 1 })),

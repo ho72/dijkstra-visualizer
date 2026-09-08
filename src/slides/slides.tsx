@@ -82,13 +82,13 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
             <span className="label">출발점 S</span>
             <strong>(0, 0)</strong>
           </p>
-          <Reveal show={step >= 1}>
+          <Reveal show={step >= 1} hiddenOpacity={0}>
             <p>
               <span className="label">도착점 G</span>
               <strong>(N−1, N−1)</strong>
             </p>
           </Reveal>
-          <Reveal show={step >= 2}>
+          <Reveal show={step >= 2} hiddenOpacity={0}>
             <p className="muted">
               N × N 격자 · 0-based 인덱스
               <br />
@@ -127,13 +127,13 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
             <span>이동 거리 · 이동 횟수</span>
             <span>×</span>
           </div>
-          <Reveal show={step >= 1}>
+          <Reveal show={step >= 1} hiddenOpacity={0}>
             <div className="objective-row blue">
               <span>복구 시간의 합</span>
               <Icon name="check" size={40} />
             </div>
           </Reveal>
-          <Reveal show={step >= 2}>
+          <Reveal show={step >= 2} hiddenOpacity={0}>
             <p className="objective-result">
               칸마다 비용 <b>0~9</b>
               <br />
@@ -156,7 +156,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
           <div className="bfs-levels">
             0 <span>→</span> 1 <span>→</span> 2 <span>→</span> 3
           </div>
-          <Reveal show={step >= 3}>
+          <Reveal show={step >= 3} hiddenOpacity={0}>
             <p className="blue">
               모든 이동 비용이 같을 때<br />
               최소 이동 횟수로 최소 비용도 보장
@@ -181,7 +181,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
             ["상하좌우 이동", "간선 · Edge"],
             ["복구 시간", "가중치 · Weight"],
           ].map(([a, b], i) => (
-            <Reveal key={a} show={step >= i + 1}>
+            <Reveal key={a} show={step >= i + 1} hiddenOpacity={0}>
               <span>{a}</span>
               <i>→</i>
               <strong>{b}</strong>

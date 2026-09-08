@@ -1,6 +1,7 @@
 import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
 import { chapters } from "./chapters";
 import { javaSteps, gridCodeSteps } from "./code";
+import { algorithmChoices } from "./algorithmChoices";
 
 export type SlideDefinition = {
   id: string;
@@ -8,6 +9,8 @@ export type SlideDefinition = {
   sectionName: string;
   title: string;
   steps: number;
+  // Entry animation phases are independent of keyboard navigation and URL steps.
+  autoRevealStages?: number;
   kind: "cover" | "agenda" | "chapter" | "content" | "closing";
 };
 
@@ -31,35 +34,40 @@ const contentSlides = [
     section: "01",
     sectionName: "문제 이해",
     title: "한 번에 한 칸, 상하좌우로 이동한다",
-    steps: 3,
+    steps: 1,
+    autoRevealStages: 3,
   },
   {
     id: "objective",
     section: "01",
     sectionName: "문제 이해",
     title: "최소화해야 하는 것은 총 복구 시간이다",
-    steps: 3,
+    steps: 1,
+    autoRevealStages: 3,
   },
   {
     id: "candidates",
     section: "02",
     sectionName: "알고리즘 선택",
     title: "그래프 탐색과 최단 경로의 대표 알고리즘",
-    steps: 2,
+    steps: 1,
+    autoRevealStages: algorithmChoices.length + 1,
   },
   {
     id: "interpretation",
     section: "02",
     sectionName: "알고리즘 선택",
     title: "격자도 결국 그래프다",
-    steps: 4,
+    steps: 1,
+    autoRevealStages: 4,
   },
   {
     id: "bfs",
     section: "02",
     sectionName: "알고리즘 선택",
     title: "격자 최단 경로니까, BFS로 풀 수 있을까?",
-    steps: 4,
+    steps: 1,
+    autoRevealStages: 4,
   },
   {
     id: "counterexample",
