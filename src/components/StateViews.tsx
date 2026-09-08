@@ -26,11 +26,13 @@ export function PriorityQueueView({
   grid = false,
   large = false,
   reservedSlots = large ? 3 : 4,
+  emptyLabel = "비어 있음",
 }: {
   queue: QueueEntry[];
   grid?: boolean;
   large?: boolean;
   reservedSlots?: number;
+  emptyLabel?: string;
 }) {
   const reduced = useReducedMotion();
   return (
@@ -56,17 +58,17 @@ export function PriorityQueueView({
               animate={{ opacity: 1, y: `${i * 100}%` }}
               exit={{ opacity: 0 }}
               transition={{ duration: reduced ? 0 : 0.28, ease: "easeInOut" }}
-              className={`pq-row ${i === 0 ? "pq-min" : ""} ${entry.stale ? "pq-stale" : ""}`}
+              className={`pq-row ${i === 0 ? "pq-min" : ""}`}
             >
               <span>{grid ? coordinate(entry.node) : entry.node}</span>
               <strong>{entry.cost}</strong>
               <small>
-                {entry.stale ? "오래된 후보" : i === 0 ? "← 최소" : ""}
+                {i === 0 ? "← 최소" : ""}
               </small>
             </motion.div>
           ))}
         </AnimatePresence>
-        {queue.length === 0 && <div className="pq-empty">비어 있음</div>}
+        {queue.length === 0 && <div className="pq-empty">{emptyLabel}</div>}
       </div>
     </div>
   );
@@ -98,6 +100,17 @@ export function CalculationView({
   grid?: boolean;
 }) {
   const c = snapshot.calculation;
+  if (snapshot.phase === "poll")
+    return (
+      <div className="calculation poll-calculation">
+        <span className="label">poll()로 꺼낸 비용</span>
+        <strong>{snapshot.currentCost}</strong>
+        <div className="cost-comparison">
+          현재 dist = {snapshot.dist[snapshot.currentNode!]}
+        </div>
+        <p>다음: 두 비용 비교</p>
+      </div>
+    );
   if (snapshot.phase === "stale")
     return (
       <div className="calculation stale-calculation">
@@ -167,7 +180,9 @@ export function ExecutionState({
         {phaseLabels[snapshot.phase]}
       </div>
       <div className="current-line">
-        <span className="label">현재 {grid ? "좌표" : "정점"}</span>
+        <span className="label">
+          {snapshot.phase === "poll" || snapshot.phase === "stale" ? "꺼낸 후보" : `현재 ${grid ? "좌표" : "정점"}`}
+        </span>
         <b>
           {snapshot.currentNode === undefined
             ? "—"

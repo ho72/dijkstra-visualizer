@@ -127,8 +127,8 @@ const contentSlides = [
     id: "stale",
     section: "03",
     sectionName: "다익스트라 알고리즘",
-    title: "PQ에는 오래된 비용의 후보도 남아 있다",
-    steps: 3,
+    title: "PQ에서 꺼낸 비용을 현재 dist와 비교한다",
+    steps: 5,
   },
   {
     id: "execution",

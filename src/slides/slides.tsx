@@ -231,7 +231,8 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
       : s.phase === "select" ? `정점 ${s.currentNode} 선택·확정`
       : s.phase === "relax-success" ? `dist[${s.calculation!.to}] 갱신 + PQ 추가`
       : s.phase === "relax-fail" ? `dist[${s.calculation!.to}] 유지`
-      : s.phase === "stale" ? "오래된 기록 건너뛰기"
+      : s.phase === "poll" ? `후보 (${s.currentNode}, ${s.currentCost}) 꺼내기`
+      : s.phase === "stale" ? "비용 비교 후 오래된 기록 건너뛰기"
       : s.phase === "init" ? "dist와 PQ 초기화" : "최종 비용 확인";
     return (
       <div className="execution-scene">
@@ -245,7 +246,10 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
         </div>
         <ExecutionState snapshot={s} />
         <p className="execution-message">
-          {s.id === afterOne.id ? "1번에서 이웃 2·3·4의 비용 3·2·5를 기록한다. 다음 최소 후보는?" : s.message}
+          {s.id === afterOne.id ? "1번에서 이웃 2·3·4의 비용 3·2·5를 기록한다. 다음 최소 후보는?"
+            : s.phase === "select" && s.currentNode === 3 ? "다른 후보의 비용은 이미 3 이상이다. 음수 간선이 없으므로 dist[3] = 2를 확정한다."
+            : s.phase === "relax-fail" && s.activeEdge?.[1] === 3 ? "나중에 2→3을 비교해도 3+2=5 > 2이므로, 이미 확정한 dist[3]은 그대로다."
+            : s.message}
         </p>
       </div>
     );
@@ -262,7 +266,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
         <p className="bottom-message focus-caption">
           {id === "relaxation"
             ? step >= 2 ? "dist[4]를 4로 갱신하고, 새 후보 (4, 4)를 PQ에 추가한다." : "기존 경로 1→4는 비용 5. 새 경로 1→3→4는?"
-            : "새 비용이 기존 값 이상이면 dist를 유지하고, PQ에도 추가하지 않는다."}
+            : "정점 3은 이미 비용 2로 확정했다. 나중에 비교한 3+2=5로는 갱신하지 않는다."}
         </p>
       </>
     );

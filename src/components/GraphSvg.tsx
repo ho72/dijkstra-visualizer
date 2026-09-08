@@ -159,7 +159,7 @@ export function GraphSvg({
       {GRAPH_NODES.map((node) => {
         const [x, y] = GRAPH_POSITIONS[node];
         const current =
-          snapshot?.currentNode === node && snapshot.phase !== "stale";
+          snapshot?.currentNode === node && !["poll", "stale"].includes(snapshot.phase);
         const changed =
           snapshot?.calculation?.to === node &&
           snapshot.phase === "relax-success";

@@ -60,5 +60,6 @@ test("Dijkstra teaches the rules before the complete walkthrough without repeati
     slides.filter(slide => slide.section === "03" && slide.kind === "content").map(slide => slide.id),
     ["idea", "dist", "pq", "cycle", "relaxation", "no-update", "settlement", "stale", "execution", "graph-result", "java"],
   );
-  assert.equal(slides.find(slide => slide.id === "execution")!.steps, 15);
+  assert.equal(slides.find(slide => slide.id === "execution")!.steps, 17);
+  assert.equal(slides.find(slide => slide.id === "stale")!.steps, 5);
 });

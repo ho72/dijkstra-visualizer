@@ -40,10 +40,7 @@ export function runDijkstra(
       id: `step-${steps.length}`,
       dist: { ...dist },
       previous: { ...previous },
-      queue: queue.map((e) => ({
-        ...e,
-        stale: dist[e.node] !== null && e.cost > dist[e.node]!,
-      })),
+      queue: queue.map((e) => ({ ...e })),
       settled: [...settled],
       calculation: state.calculation ? { ...state.calculation } : undefined,
       activeEdge: state.activeEdge ? [...state.activeEdge] : undefined,

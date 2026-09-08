@@ -937,15 +937,6 @@ code {
   border-left: 3px solid var(--blue);
   padding-left: 17px;
 }
-.pq-stale {
-  color: #76664f;
-  background: transparent;
-  border-left-color: #c6cbd3;
-  text-decoration: line-through;
-}
-.pq-stale small {
-  color: #76664f;
-}
 .pq-empty {
   font-size: 28px;
   padding: 20px;

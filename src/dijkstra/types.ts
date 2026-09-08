@@ -3,7 +3,6 @@ export type QueueEntry = {
   id: number;
   node: number;
   cost: number;
-  stale?: boolean;
 };
 export type Calculation = {
   from: number;
@@ -18,6 +17,7 @@ export type DijkstraStep = {
   id: string;
   phase:
     | "init"
+    | "poll"
     | "select"
     | "inspect"
     | "relax-success"

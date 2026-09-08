@@ -1,5 +1,6 @@
 import { GRAPH_NODES, GRAPH_EDGES, GRID, gridGraph } from "./graph";
 import { runDijkstra, recoverPath } from "./runDijkstra";
+import type { DijkstraStep } from "./types";
 
 export const graphSteps = runDijkstra(GRAPH_NODES, GRAPH_EDGES, 1);
 const grid = gridGraph(GRID);
@@ -24,7 +25,21 @@ export const graphPresentationSteps = graphSteps.filter(
     s.phase === "init" ||
     s.id === afterOne.id ||
     (index > graphSteps.indexOf(afterOne) && s.phase !== "inspect"),
-);
+).flatMap<DijkstraStep>((s) => s.phase === "stale" ? [
+  // Split removal and rejection for teaching. Both moments have the same
+  // distances/remaining queue; no algorithm state changes during the check.
+  {
+    ...s,
+    id: `${s.id}-poll`,
+    phase: "poll",
+    dist: { ...s.dist },
+    queue: s.queue.map(entry => ({ ...entry })),
+    settled: [...s.settled],
+    previous: { ...s.previous },
+    message: "PQ에서 후보를 꺼냈다. 이제 꺼낸 비용을 현재 dist와 비교한다.",
+  },
+  s,
+] : [s]);
 export const firstRelax = graphSteps.find(
   (s) =>
     s.phase === "relax-success" &&
@@ -52,6 +67,7 @@ export const graphPath = recoverPath(finalGraph, 6);
 export const gridPath = recoverPath(finalGrid, GRID.length ** 2 - 1);
 export const phaseLabels = {
   init: "초기화",
+  poll: "후보 꺼내기",
   select: "최소 후보 선택",
   inspect: "간선 확인",
   "relax-success": "거리 갱신",

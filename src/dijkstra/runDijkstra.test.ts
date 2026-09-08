@@ -48,20 +48,47 @@ test("PQ chooses node 3 (cost 2) before node 2 (cost 3)", () => {
 });
 test("presentation events retain every decision after the grouped initialization", () => {
   assert.equal(graphSteps.length, 26);
-  assert.equal(graphPresentationSteps.length, 15);
+  assert.equal(graphPresentationSteps.length, 17);
   assert.equal(graphPresentationSteps[0], graphSteps[0]);
   assert.equal(graphPresentationSteps[1], afterOne);
   assert.equal(graphPresentationSteps.at(-1), finalGraph);
   assert.ok([firstRelax, failedRelax, secondRelax, staleStep].every(s => graphPresentationSteps.includes(s)));
   assert.deepEqual(
-    graphPresentationSteps.slice(2),
+    graphPresentationSteps.slice(2).filter(s => s.phase !== "poll"),
     graphSteps.slice(graphSteps.indexOf(afterOne) + 1).filter(s => s.phase !== "inspect"),
   );
+});
+
+test("candidate removal is shown before rejection without changing distances or settled vertices", () => {
+  for (const [index, step] of graphPresentationSteps.entries()) {
+    if (step.phase !== "stale") continue;
+    const polled = graphPresentationSteps[index - 1];
+    const before = graphPresentationSteps[index - 2];
+    assert.equal(polled.phase, "poll");
+    assert.equal(polled.currentNode, before.queue[0].node);
+    assert.equal(polled.currentCost, before.queue[0].cost);
+    assert.deepEqual(polled.queue, before.queue.slice(1));
+    assert.deepEqual(polled.dist, before.dist);
+    assert.deepEqual(polled.settled, before.settled);
+    assert.deepEqual(step.queue, polled.queue);
+    assert.deepEqual(step.dist, polled.dist);
+    assert.deepEqual(step.settled, polled.settled);
+    assert.ok(step.currentCost! > step.dist[step.currentNode!]!);
+    assert.notEqual(polled.queue, step.queue);
+    assert.notEqual(polled.dist, step.dist);
+  }
 });
 
 test("settled labels mean a valid minimum was popped, not merely enqueued", () => {
   assert.ok(!afterOne.settled.includes(4));
   assert.ok(!firstRelax.settled.includes(4));
+  const selectedThree = graphSteps.find(s => s.phase === "select" && s.currentNode === 3)!;
+  assert.ok(selectedThree.settled.includes(3));
+  assert.ok(!selectedThree.settled.includes(2));
+  assert.ok(graphSteps.indexOf(selectedThree) < graphSteps.indexOf(failedRelax));
+  assert.equal(selectedThree.dist[3], 2);
+  assert.equal(failedRelax.calculation!.newCost, 5);
+  assert.equal(failedRelax.dist[3], 2);
   for (let i = 1; i < graphSteps.length; i++) {
     const s = graphSteps[i], previous = graphSteps[i - 1];
     if (s.phase === "select") {
@@ -77,11 +104,8 @@ test("first relaxation, failed update, second relaxation, and stale candidates m
     [5, 4],
   );
   assert.deepEqual(
-    firstRelax.queue.filter((e) => e.node === 4).map((e) => [e.cost, e.stale]),
-    [
-      [4, false],
-      [5, true],
-    ],
+    firstRelax.queue.filter((e) => e.node === 4).map((e) => e.cost),
+    [4, 5],
   );
   assert.deepEqual(
     [
