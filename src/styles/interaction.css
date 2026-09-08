@@ -1,0 +1,53 @@
+.stage:focus {
+  outline: none;
+}
+.step-scrubber {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 18px;
+  color: #8b9bb0;
+  margin: 0 9px 0 5px;
+}
+.step-scrubber input {
+  width: 130px;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.playing-status {
+  color: var(--blue);
+  font:
+    17px "Apple SD Gothic Neo",
+    sans-serif;
+  letter-spacing: 0;
+}
+.three-morph {
+  width: 900px;
+  height: 630px;
+  position: relative;
+}
+.morph-source-graph {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  z-index: 1;
+}
+.morph-coordinate-labels {
+  position: absolute;
+  bottom: 17px;
+  left: 180px;
+  right: 180px;
+  display: flex;
+  justify-content: space-between;
+  font: 19px var(--mono);
+  color: #7d91ac;
+}
+.grid-svg [role="button"]:focus-visible {
+  outline: none;
+  filter: drop-shadow(0 0 4px #2968dd);
+}
+@media (prefers-reduced-motion: reduce) {
+  .presenter-controls {
+    transition: none;
+  }
+}

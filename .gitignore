@@ -1,0 +1,7 @@
+node_modules/
+dist/
+output/
+*.tsbuildinfo
+.DS_Store
+.playwright-cli/
+SWEA_1249_codex_bundle.zip

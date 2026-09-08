@@ -1,0 +1,20 @@
+:root {
+  font-family:
+    "Pretendard", "SUIT", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color: #15243c;
+  background: #e5eaf0;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --paper: #f9fbfd;
+  --ink: #15243c;
+  --muted: #6e7d91;
+  --line: #dce4ed;
+  --blue: #2968dd;
+  --blue-light: #edf3fe;
+  --green: #16815b;
+  --orange: #b76a19;
+  --yellow: #f1c452;
+  --coral: #ed8b82;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}

@@ -1,0 +1,52 @@
+import { GRAPH_NODES, GRAPH_EDGES, GRID, gridGraph } from "./graph";
+import { runDijkstra, recoverPath } from "./runDijkstra";
+
+export const graphSteps = runDijkstra(GRAPH_NODES, GRAPH_EDGES, 1);
+const grid = gridGraph(GRID);
+export const allGridSteps = runDijkstra(grid.nodes, grid.edges, 0);
+// The introductory grid run shows each selection and successful update. The
+// full inspection trace stays available in allGridSteps for validation.
+export const gridSteps = allGridSteps.filter((s) =>
+  ["init", "select", "relax-success", "complete"].includes(s.phase),
+);
+export const initial = graphSteps[0];
+export const afterOne = graphSteps.find(
+  (s) =>
+    s.phase === "relax-success" &&
+    s.activeEdge?.[0] === 1 &&
+    s.activeEdge[1] === 4,
+)!;
+export const firstRelax = graphSteps.find(
+  (s) =>
+    s.phase === "relax-success" &&
+    s.activeEdge?.[0] === 3 &&
+    s.activeEdge[1] === 4,
+)!;
+export const failedRelax = graphSteps.find(
+  (s) =>
+    s.phase === "relax-fail" &&
+    s.activeEdge?.[0] === 2 &&
+    s.activeEdge[1] === 3,
+)!;
+export const secondRelax = graphSteps.find(
+  (s) =>
+    s.phase === "relax-success" &&
+    s.activeEdge?.[0] === 4 &&
+    s.activeEdge[1] === 5,
+)!;
+export const staleStep = graphSteps.find(
+  (s) => s.phase === "stale" && s.currentNode === 4,
+)!;
+export const finalGraph = graphSteps.at(-1)!;
+export const finalGrid = allGridSteps.at(-1)!;
+export const graphPath = recoverPath(finalGraph, 6);
+export const gridPath = recoverPath(finalGrid, GRID.length ** 2 - 1);
+export const phaseLabels = {
+  init: "초기화",
+  select: "최소 후보 선택",
+  inspect: "간선 확인",
+  "relax-success": "거리 갱신",
+  "relax-fail": "갱신하지 않음",
+  stale: "오래된 후보",
+  complete: "탐색 완료",
+};
