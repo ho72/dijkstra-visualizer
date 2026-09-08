@@ -32,8 +32,8 @@ import {
   graphPresentationSteps,
   gridSteps,
 } from "../dijkstra/snapshots";
-import roadImage from "../../SWEA_1249_codex_bundle/references/road_depth_reference.png";
-import gridImage from "../../SWEA_1249_codex_bundle/references/grid_reference.png";
+import roadImage from "../assets/road-depth-reference.png";
+import gridImage from "../assets/grid-reference.png";
 
 const GraphToGridScene = lazy(() => import("../three/GraphToGridScene"));
 

@@ -1,7 +1,26 @@
-node_modules/
-dist/
-output/
-*.tsbuildinfo
-.DS_Store
-.playwright-cli/
-SWEA_1249_codex_bundle.zip
+# Keep this repository limited to the files required to build and serve the web PPT.
+/*
+
+# Repository/build metadata required by the deployed app.
+!/.gitignore
+!/.openai/
+!/.openai/hosting.json
+!/index.html
+!/package.json
+!/package-lock.json
+!/tsconfig.json
+!/vite.config.ts
+
+# Web PPT source.
+!/src/
+!/src/**
+
+# Runtime assets used by the presentation.
+!/public/
+!/public/slide-thumbnails/
+!/public/slide-thumbnails/**
+
+# Local-only development and reference material inside otherwise included paths.
+/src/**/*.test.ts
+/src/**/*.test.tsx
+/public/code/
