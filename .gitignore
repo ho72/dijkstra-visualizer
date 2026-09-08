@@ -12,6 +12,11 @@
 !/tsconfig.json
 !/vite.config.ts
 
+# Downloadable PDF version linked from the README.
+!/output/
+!/output/pdf/
+!/output/pdf/swea-1249-presentation.pdf
+
 # Web PPT source.
 !/src/
 !/src/**

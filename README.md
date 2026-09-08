@@ -1,6 +1,6 @@
 # SWEA 1249 보급로 발표 자료
 
-SSAFY 광주 4반에서 SWEA 1249 「보급로」 문제를 설명하기 위해 만든 웹 발표 자료입니다.
+SSAFY 16기 광주 4반에서 SWEA 1249 「보급로」 문제를 설명하기 위해 만든 웹 발표 자료입니다.
 
 - [웹 발표 자료 보기](https://dijkstra-ppt.vercel.app/)
-- PDF: 추후 업로드 예정
+- [PDF 발표 자료 보기](output/pdf/swea-1249-presentation.pdf)
