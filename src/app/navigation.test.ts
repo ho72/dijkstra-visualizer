@@ -42,7 +42,7 @@ test("the navigator renders every slide and exactly one accessible current page"
     assert.equal((markup.match(/<li>/g) ?? []).length, slides.length);
     assert.equal((markup.match(/aria-controls="presentation-stage"/g) ?? []).length, slides.length);
     assert.equal((markup.match(/aria-current="page"/g) ?? []).length, 1);
-    assert.equal((markup.match(/navigator-chapter/g) ?? []).length, 7);
+    assert.equal((markup.match(/navigator-chapter/g) ?? []).length, 6);
     assert.ok(markup.includes(`title="${slides[activeIndex].title}" aria-current="page"`));
     assert.equal((markup.match(/class="navigator-preview"/g) ?? []).length, slides.length);
     for (const slide of slides) assert.ok(markup.includes(slide.title));

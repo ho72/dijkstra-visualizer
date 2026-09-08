@@ -5,7 +5,7 @@ import { chapters } from "../slides/chapters";
 import { createPresentationReducer, readLocation } from "./presentationState";
 
 test("deck opens with cover and agenda and has unique slide identifiers", () => {
-  assert.equal(slides.length, 37);
+  assert.equal(slides.length, 36);
   assert.deepEqual(
     slides.slice(0, 2).map((slide) => slide.kind),
     ["cover", "agenda"],
@@ -18,7 +18,7 @@ test("deck opens with cover and agenda and has unique slide identifiers", () => 
 });
 
 test("each chapter has one single-step introduction immediately before its content", () => {
-  assert.equal(slides.filter((slide) => slide.kind === "chapter").length, 7);
+  assert.equal(slides.filter((slide) => slide.kind === "chapter").length, 6);
   for (const chapter of chapters) {
     const index = slides.findIndex(
       (slide) => slide.id === `chapter-${chapter.number}`,
@@ -39,6 +39,21 @@ test("selection introduces candidates and graph interpretation before BFS and it
       .map((slide) => slide.id),
     ["candidates", "interpretation", "bfs", "counterexample", "choice"],
   );
+});
+
+test("grid execution follows the code directly inside chapter four", () => {
+  const codeIndex = slides.findIndex(slide => slide.id === "grid-code");
+  assert.deepEqual(slides.slice(codeIndex, codeIndex + 3).map(slide => slide.id),
+    ["grid-code", "grid-execution", "grid-result"]);
+  for (const slide of slides.slice(codeIndex, codeIndex + 3)) {
+    assert.equal(slide.section, "04");
+    assert.equal(slide.sectionName, "보급로에 적용");
+    assert.equal(slide.kind, "content");
+  }
+  assert.equal(slides[codeIndex + 1].steps, 16);
+  assert.deepEqual(chapters.map(chapter => chapter.number), ["01", "02", "03", "04", "05", "06"]);
+  assert.equal(slides.filter(slide => slide.kind === "chapter" && slide.title === "격자 실행").length, 0);
+  assert.equal(slides[codeIndex + 3].title, "코테에서 알아보기");
 });
 
 test("all actual slide steps and chapter boundaries support next/previous and URL restoration", () => {
