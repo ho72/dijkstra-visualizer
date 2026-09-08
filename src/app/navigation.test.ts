@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readFileSync } from "node:fs";
 import { SlideNavigator } from "../components/SlideNavigator";
 import { slides } from "../slides/deck";
 import { fitStage, navigationFocusIndex } from "./navigation";
@@ -42,7 +43,8 @@ test("the navigator renders every slide and exactly one accessible current page"
     assert.equal((markup.match(/aria-controls="presentation-stage"/g) ?? []).length, slides.length);
     assert.equal((markup.match(/aria-current="page"/g) ?? []).length, 1);
     assert.equal((markup.match(/navigator-chapter/g) ?? []).length, 7);
-    assert.ok(markup.includes(`aria-label="${activeIndex + 1}페이지: ${slides[activeIndex].title}" aria-current="page"`));
+    assert.ok(markup.includes(`title="${slides[activeIndex].title}" aria-current="page"`));
+    assert.equal((markup.match(/class="navigator-preview"/g) ?? []).length, slides.length);
     for (const slide of slides) assert.ok(markup.includes(slide.title));
     assert.ok(markup.includes('aria-label="전체화면으로 발표"'));
     assert.ok(!markup.includes('inert=""'));
@@ -51,6 +53,15 @@ test("the navigator renders every slide and exactly one accessible current page"
     slides, activeIndex: 27, disabled: true, onSelect: () => {}, onPresent: () => {},
   }));
   assert.ok(disabled.includes('inert=""'));
+});
+
+test("every navigator image is a captured JPEG asset with a stable slide-id filename", () => {
+  for (const slide of slides) {
+    const bytes = readFileSync(new URL(`../../public/slide-thumbnails/${slide.id}.jpg`, import.meta.url));
+    assert.ok(bytes.length > 1000, `${slide.id} has a real screenshot`);
+    assert.equal(bytes.readUInt16BE(0), 0xffd8, `${slide.id} is a JPEG`);
+    assert.equal(bytes.readUInt16BE(bytes.length - 2), 0xffd9, `${slide.id} is complete`);
+  }
 });
 
 test("selecting any listed slide pauses playback, starts at step one, and restores from its URL", () => {

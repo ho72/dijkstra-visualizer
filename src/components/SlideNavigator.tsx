@@ -32,7 +32,9 @@ export function SlideNavigator({
               type="button"
               ref={element => { buttons.current[index] = element; }}
               className={`navigator-slide ${slide.kind === "chapter" ? "navigator-chapter" : ""}`}
+              data-slide-id={slide.id}
               aria-label={`${index + 1}페이지: ${slide.title}`}
+              title={slide.title}
               aria-current={index === activeIndex ? "page" : undefined}
               aria-controls="presentation-stage"
               onClick={() => onSelect(index)}
@@ -45,7 +47,17 @@ export function SlideNavigator({
               }}
             >
               <span className="navigator-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-              <span className="navigator-title">{slide.title}</span>
+              <span className="navigator-preview">
+                <img
+                  src={`/slide-thumbnails/${slide.id}.jpg`}
+                  alt=""
+                  width={960}
+                  height={540}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                />
+              </span>
             </button>
           </li>
         ))}
