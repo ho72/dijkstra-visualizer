@@ -1,10 +1,9 @@
 import { algorithmChoices } from "../slides/algorithmChoices";
 import { Reveal } from "./ConceptVisuals";
 import { Icon } from "./Icon";
-import { motion } from "framer-motion";
 
 export function AlgorithmCandidates({ step }: { step: number }) {
-  const complete = step >= algorithmChoices.length;
+  const complete = step >= 1;
   return (
     <div className="algorithm-candidates">
       <p className="selection-lead">
@@ -18,20 +17,16 @@ export function AlgorithmCandidates({ step }: { step: number }) {
           </tr>
         </thead>
         <tbody>
-          {algorithmChoices.map((algorithm, index) => (
-            <motion.tr
+          {algorithmChoices.map((algorithm) => (
+            <tr
               key={algorithm.id}
-              initial={false}
-              animate={{ opacity: step >= index ? 1 : 0 }}
-              transition={{ duration: 0.35 }}
-              aria-hidden={step < index}
               className={
                 complete && algorithm.id === "bfs" ? "candidate-bfs" : ""
               }
             >
               <th scope="row">{algorithm.name}</th>
               <td>{algorithm.purpose}</td>
-            </motion.tr>
+            </tr>
           ))}
         </tbody>
       </table>

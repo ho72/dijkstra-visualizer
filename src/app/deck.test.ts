@@ -41,12 +41,12 @@ test("selection introduces candidates and graph interpretation before BFS and it
   );
 });
 
-test("only pages 05, 06, 08, 09 and 10 reveal automatically with no manual steps", () => {
+test("only pages 05, 06, 09 and 10 reveal automatically with no manual steps", () => {
   const automatic = slides.filter(slide => slide.autoRevealStages !== undefined);
-  assert.deepEqual(automatic.map(slide => slides.indexOf(slide) + 1), [5, 6, 8, 9, 10]);
+  assert.deepEqual(automatic.map(slide => slides.indexOf(slide) + 1), [5, 6, 9, 10]);
   assert.deepEqual(automatic.map(slide => slide.id),
-    ["rules", "objective", "candidates", "interpretation", "bfs"]);
-  assert.deepEqual(automatic.map(slide => slide.autoRevealStages), [3, 3, 6, 4, 4]);
+    ["rules", "objective", "interpretation", "bfs"]);
+  assert.deepEqual(automatic.map(slide => slide.autoRevealStages), [3, 3, 4, 4]);
   const lengths = slides.map(slide => slide.steps);
   const reduce = createPresentationReducer(lengths);
   for (const slide of automatic) {
@@ -62,6 +62,21 @@ test("only pages 05, 06, 08, 09 and 10 reveal automatically with no manual steps
   }
   assert.equal(slides.find(slide => slide.id === "counterexample")?.steps, 3);
   assert.equal(slides.find(slide => slide.id === "choice")?.steps, 4);
+});
+
+test("page 08 has two manual steps with reversible navigation and URL restoration", () => {
+  assert.equal(slides[7].id, "candidates");
+  assert.equal(slides[7].steps, 2);
+  assert.equal(slides[7].autoRevealStages, undefined);
+  const lengths = slides.map(slide => slide.steps);
+  const reduce = createPresentationReducer(lengths);
+  const first = readLocation("?scene=8&step=1", lengths);
+  const second = reduce(first, { type: "next" });
+  assert.equal(second.index, 7);
+  assert.equal(second.step, 1);
+  assert.deepEqual(second, readLocation("?scene=8&step=2", lengths));
+  assert.deepEqual(reduce(second, { type: "previous" }), first);
+  assert.equal(reduce(second, { type: "next" }).index, 8);
 });
 
 test("grid execution follows the code directly inside chapter four", () => {

@@ -6,6 +6,7 @@ import { AUTO_REVEAL_INTERVAL_MS, scheduleAutomaticReveal } from "./automaticRev
 import { AlgorithmCandidates } from "../components/AlgorithmSelection";
 
 test("entrance phases appear in order, once, then stop", context => {
+  assert.equal(AUTO_REVEAL_INTERVAL_MS, 300);
   context.mock.timers.enable({ apis: ["setTimeout"] });
   const seen: number[] = [];
   const cleanup = scheduleAutomaticReveal(4, stage => seen.push(stage));
@@ -50,17 +51,19 @@ test("StrictMode setup and cleanup do not duplicate entrance phases", context =>
   cleanup();
 });
 
-test("candidate rows reveal individually before the concluding BFS emphasis", () => {
-  for (let stage = 0; stage <= 5; stage++) {
-    const html = renderToStaticMarkup(createElement(AlgorithmCandidates, { step: stage }));
+test("all candidate rows are visible from step one, with BFS emphasis and text only at step two", () => {
+  for (let step = 0; step <= 1; step++) {
+    const html = renderToStaticMarkup(createElement(AlgorithmCandidates, { step }));
     const tbody = html.split("<tbody>")[1].split("</tbody>")[0];
     const rows = tbody.match(/<tr\b[^>]*>/g) ?? [];
     assert.equal(rows.length, 5);
-    rows.forEach((row, index) => {
-      assert.ok(row.includes(`aria-hidden="${index > stage}"`));
-      assert.ok(row.includes(`opacity:${index > stage ? 0 : 1}`));
-    });
-    assert.equal(html.includes('class="candidate-bfs"'), stage === 5);
-    assert.ok(html.includes(`class="selection-takeaway" aria-hidden="${stage < 5}"`));
+    assert.ok(!tbody.includes('aria-hidden="true"'));
+    assert.ok(!tbody.includes("opacity:0"));
+    for (const name of ["DFS", "BFS", "Dijkstra", "Bellman–Ford", "Floyd–Warshall"]) {
+      assert.ok(tbody.includes(name));
+    }
+    assert.equal(html.includes('class="candidate-bfs"'), step === 1);
+    assert.ok(html.includes(`class="selection-takeaway" aria-hidden="${step === 0}"`));
+    assert.ok(html.split('class="selection-takeaway"')[1].includes(`opacity:${step}`));
   }
 });

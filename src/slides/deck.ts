@@ -1,7 +1,6 @@
 import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
 import { chapters } from "./chapters";
 import { javaSteps, gridCodeSteps } from "./code";
-import { algorithmChoices } from "./algorithmChoices";
 
 export type SlideDefinition = {
   id: string;
@@ -50,8 +49,7 @@ const contentSlides = [
     section: "02",
     sectionName: "알고리즘 선택",
     title: "그래프 탐색과 최단 경로의 대표 알고리즘",
-    steps: 1,
-    autoRevealStages: algorithmChoices.length + 1,
+    steps: 2,
   },
   {
     id: "interpretation",

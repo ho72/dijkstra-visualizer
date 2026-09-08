@@ -1,4 +1,4 @@
-export const AUTO_REVEAL_INTERVAL_MS = 900;
+export const AUTO_REVEAL_INTERVAL_MS = 300;
 
 // Schedule a finite entrance sequence, never a presentation navigation action.
 // Cleanup cancels pending phases on slide exit, reset, or StrictMode remount.
