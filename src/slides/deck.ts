@@ -10,6 +10,7 @@ export type SlideDefinition = {
   steps: number;
   // Entry animation phases are independent of keyboard navigation and URL steps.
   autoRevealStages?: number;
+  autoRevealIntervalMs?: number;
   kind: "cover" | "agenda" | "chapter" | "content" | "closing";
 };
 
@@ -66,6 +67,7 @@ const contentSlides = [
     title: "격자 최단 경로니까, BFS로 풀 수 있을까?",
     steps: 1,
     autoRevealStages: 4,
+    autoRevealIntervalMs: 500,
   },
   {
     id: "counterexample",

@@ -255,7 +255,7 @@ export function Presentation() {
                 <h1 className="slide-title">{slide.title}</h1>
               )}
               {slide.autoRevealStages ? (
-                <AutomaticReveal stages={slide.autoRevealStages}>
+                <AutomaticReveal stages={slide.autoRevealStages} intervalMs={slide.autoRevealIntervalMs}>
                   {(stage) => <SlideContent id={slide.id} step={stage} />}
                 </AutomaticReveal>
               ) : (

@@ -47,6 +47,7 @@ test("only pages 05, 06, 09 and 10 reveal automatically with no manual steps", (
   assert.deepEqual(automatic.map(slide => slide.id),
     ["rules", "objective", "interpretation", "bfs"]);
   assert.deepEqual(automatic.map(slide => slide.autoRevealStages), [3, 3, 4, 4]);
+  assert.deepEqual(automatic.map(slide => slide.autoRevealIntervalMs ?? 300), [300, 300, 300, 500]);
   const lengths = slides.map(slide => slide.steps);
   const reduce = createPresentationReducer(lengths);
   for (const slide of automatic) {

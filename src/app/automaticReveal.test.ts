@@ -41,6 +41,30 @@ test("slide exit cancels pending reveals and re-entry starts a fresh sequence", 
   stopAgain();
 });
 
+test("the BFS interval override reveals every 500ms without changing the 300ms default", context => {
+  context.mock.timers.enable({ apis: ["setTimeout"] });
+  const bfs: number[] = [];
+  const normal: number[] = [];
+  const stopBfs = scheduleAutomaticReveal(4, stage => bfs.push(stage), 500);
+  const stopNormal = scheduleAutomaticReveal(4, stage => normal.push(stage));
+  context.mock.timers.tick(300);
+  assert.deepEqual(normal, [1]);
+  assert.deepEqual(bfs, []);
+  context.mock.timers.tick(199);
+  assert.deepEqual(bfs, []);
+  context.mock.timers.tick(1);
+  assert.deepEqual(bfs, [1]);
+  context.mock.timers.tick(500);
+  assert.deepEqual(bfs, [1, 2]);
+  assert.deepEqual(normal, [1, 2, 3]);
+  context.mock.timers.tick(500);
+  assert.deepEqual(bfs, [1, 2, 3]);
+  context.mock.timers.tick(60_000);
+  assert.deepEqual(bfs, [1, 2, 3]);
+  stopBfs();
+  stopNormal();
+});
+
 test("StrictMode setup and cleanup do not duplicate entrance phases", context => {
   context.mock.timers.enable({ apis: ["setTimeout"] });
   const seen: number[] = [];

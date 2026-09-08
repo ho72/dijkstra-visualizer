@@ -5,9 +5,10 @@ export const AUTO_REVEAL_INTERVAL_MS = 300;
 export function scheduleAutomaticReveal(
   stages: number,
   onReveal: (stage: number) => void,
+  intervalMs = AUTO_REVEAL_INTERVAL_MS,
 ) {
   const timers = Array.from({ length: Math.max(0, stages - 1) }, (_, index) =>
-    setTimeout(() => onReveal(index + 1), (index + 1) * AUTO_REVEAL_INTERVAL_MS),
+    setTimeout(() => onReveal(index + 1), (index + 1) * intervalMs),
   );
   return () => timers.forEach(clearTimeout);
 }
