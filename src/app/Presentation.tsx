@@ -208,7 +208,7 @@ export function Presentation() {
           <AnimatePresence mode="wait" initial={false}>
             <motion.section
               inert={help}
-              className={`slide slide-${slide.id}`}
+              className={`slide slide-${slide.id} slide-kind-${slide.kind}`}
               key={`${slide.id}-${revision}`}
               initial={{ opacity: 0, y: reduced ? 0 : 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -216,7 +216,7 @@ export function Presentation() {
               transition={{ duration: reduced ? 0 : 0.2 }}
               aria-label={slide.title}
             >
-              {slide.id !== "intro" && (
+              {slide.kind !== "cover" && slide.kind !== "chapter" && (
                 <h1 className="slide-title">{slide.title}</h1>
               )}
               <SlideContent id={slide.id} step={step} />

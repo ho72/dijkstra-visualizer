@@ -1,4 +1,9 @@
 import { IntroGrid } from "../components/IntroGrid";
+import { AgendaSlide, ChapterSlide } from "../components/ChapterSlides";
+import {
+  AlgorithmCandidates,
+  AlgorithmChoice,
+} from "../components/AlgorithmSelection";
 import { lazy, Suspense, useState } from "react";
 import { GraphSvg } from "../components/GraphSvg";
 import { GridSvg } from "../components/GridSvg";
@@ -34,198 +39,11 @@ import gridImage from "../../SWEA_1249_codex_bundle/references/grid_reference.pn
 
 const GraphToGridScene = lazy(() => import("../three/GraphToGridScene"));
 
-export const slides = [
-  {
-    id: "intro",
-    section: "00",
-    sectionName: "보급로",
-    title: "SWEA 1249 · 보급로",
-    steps: 1,
-  },
-  {
-    id: "problem",
-    section: "01",
-    sectionName: "문제 이해",
-    title: "S에서 G까지, 파손된 도로를 복구해야 한다",
-    steps: 1,
-  },
-  {
-    id: "rules",
-    section: "01",
-    sectionName: "문제 이해",
-    title: "한 번에 한 칸, 상하좌우로 이동한다",
-    steps: 3,
-  },
-  {
-    id: "objective",
-    section: "01",
-    sectionName: "문제 이해",
-    title: "최소화해야 하는 것은 총 복구 시간이다",
-    steps: 3,
-  },
-  {
-    id: "bfs",
-    section: "02",
-    sectionName: "알고리즘 선택",
-    title: "격자 최단 경로니까, BFS로 풀 수 있을까?",
-    steps: 4,
-  },
-  {
-    id: "counterexample",
-    section: "02",
-    sectionName: "알고리즘 선택",
-    title: "더 적게 이동하는 길이 더 저렴할까?",
-    steps: 3,
-  },
-  {
-    id: "interpretation",
-    section: "02",
-    sectionName: "알고리즘 선택",
-    title: "격자도 결국 그래프다",
-    steps: 4,
-  },
-  {
-    id: "choice",
-    section: "02",
-    sectionName: "알고리즘 선택",
-    title: "비용의 조건으로 알고리즘을 선택한다",
-    steps: 4,
-  },
-  {
-    id: "idea",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "현재까지 비용이 가장 작은 정점부터 탐색한다",
-    steps: 2,
-  },
-  {
-    id: "dist",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "dist는 현재까지 발견한 최소 비용이다",
-    steps: 2,
-  },
-  {
-    id: "pq",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "최소 비용 후보를 먼저 꺼내기 위해 PQ를 쓴다",
-    steps: 2,
-  },
-  {
-    id: "execution",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "하나의 그래프로, 한 단계씩 실행해보자",
-    steps: graphSteps.length,
-  },
-  {
-    id: "relaxation",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "더 싼 경로를 발견하면 갱신한다",
-    steps: 3,
-  },
-  {
-    id: "no-update",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "새로운 경로가 더 비싸면 갱신하지 않는다",
-    steps: 3,
-  },
-  {
-    id: "second-relaxation",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "더 좋은 경로를 찾으면 다시 갱신할 수 있다",
-    steps: 3,
-  },
-  {
-    id: "stale",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "PQ에는 오래된 비용의 후보도 남아 있다",
-    steps: 2,
-  },
-  {
-    id: "graph-result",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "1에서 6까지의 최소 비용은 11이다",
-    steps: 1,
-  },
-  {
-    id: "cycle",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "다익스트라는 같은 과정을 반복한다",
-    steps: 5,
-  },
-  {
-    id: "java",
-    section: "03",
-    sectionName: "다익스트라 알고리즘",
-    title: "눈으로 본 움직임을 Java 코드로 연결한다",
-    steps: 6,
-  },
-  {
-    id: "transform",
-    section: "04",
-    sectionName: "보급로에 적용",
-    title: "그럼 이걸 보급로에 적용하면 어떻게 될까?",
-    steps: 5,
-  },
-  {
-    id: "mapping",
-    section: "04",
-    sectionName: "보급로에 적용",
-    title: "좌표가 정점, 이동할 칸의 값이 가중치다",
-    steps: 4,
-  },
-  {
-    id: "grid-code",
-    section: "04",
-    sectionName: "보급로에 적용",
-    title: "인접 간선 대신 상하좌우를 확인한다",
-    steps: 5,
-  },
-  {
-    id: "grid-execution",
-    section: "05",
-    sectionName: "격자 실행",
-    title: "같은 다익스트라를 격자에서 실행한다",
-    steps: gridSteps.length,
-  },
-  {
-    id: "grid-result",
-    section: "05",
-    sectionName: "격자 실행",
-    title: "목적지의 dist가 최소 복구 시간이다",
-    steps: 1,
-  },
-  {
-    id: "recognition",
-    section: "06",
-    sectionName: "코테에서 알아보기",
-    title: "이런 조건이라면 다익스트라를 고려한다",
-    steps: 5,
-  },
-  {
-    id: "comparison",
-    section: "06",
-    sectionName: "코테에서 알아보기",
-    title: "격자 문제라고 무조건 BFS가 아니다",
-    steps: 1,
-  },
-  {
-    id: "summary",
-    section: "07",
-    sectionName: "정리",
-    title: "문제의 모양보다 비용 구조를 보자",
-    steps: 1,
-  },
-];
+export { slides } from "./deck";
 export function SlideContent({ id, step }: { id: string; step: number }) {
+  if (id === "agenda") return <AgendaSlide />;
+  if (id.startsWith("chapter-")) return <ChapterSlide number={id.slice(8)} />;
+  if (id === "candidates") return <AlgorithmCandidates step={step} />;
   if (id === "intro")
     return (
       <div className="intro-content">
@@ -330,15 +148,16 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
           <h2>
             BFS<span className="blue">?</span>
           </h2>
-          <p>시작점에서 가까운 위치부터 탐색</p>
+          <p>이동 횟수가 적은 칸부터 탐색</p>
           <div className="bfs-levels">
             0 <span>→</span> 1 <span>→</span> 2 <span>→</span> 3
           </div>
           <Reveal show={step >= 3}>
             <p className="blue">
               모든 이동 비용이 같을 때<br />
-              최소 이동 횟수를 보장한다.
+              최소 이동 횟수로 최소 비용도 보장
             </p>
+            <p>보급로는 칸마다 복구 시간이 다르다.</p>
           </Reveal>
         </div>
       </div>
@@ -365,33 +184,13 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
             </Reveal>
           ))}
         </div>
+        <p className="bottom-message">
+          한 출발점에서 <strong>누적 복구 시간이 최소인 경로</strong>를 찾는
+          문제다.
+        </p>
       </div>
     );
-  if (id === "choice")
-    return (
-      <div className="choice-flow">
-        <div className="choice-conditions">
-          {[
-            ["최소 비용", "목표"],
-            ["가중치 존재", "이동 비용"],
-            ["모든 비용 ≥ 0", "음수 없음"],
-          ].map(([a, b], i) => (
-            <Reveal key={a} show={step >= i}>
-              <span className="label">{b}</span>
-              <strong>{a}</strong>
-              {i < 2 && <span className="flow-arrow">→</span>}
-            </Reveal>
-          ))}
-        </div>
-        <Reveal show={step >= 3}>
-          <div className="algorithm-answer">
-            <span className="answer-line" />
-            <h2>Dijkstra</h2>
-            <p>가중치가 있는 최단 경로</p>
-          </div>
-        </Reveal>
-      </div>
-    );
+  if (id === "choice") return <AlgorithmChoice step={step} />;
   if (id === "idea")
     return (
       <div className="idea-scene">
