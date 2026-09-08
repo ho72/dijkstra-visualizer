@@ -417,8 +417,8 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
 function Cycle({ step }: { step: number }) {
   const lines = [
     ["01", "최소 후보 꺼내기", "pq.poll()"],
-    ["02", "인접 정점 확인", "graph[cur.node]"],
-    ["03", "새 누적 비용 계산", "cur.cost + edge.cost"],
+    ["02", "인접 정점 확인", "graph[now]"],
+    ["03", "새 누적 비용 계산", "currentDistance + cost"],
   ];
   return (
     <div className="cycle-scene">

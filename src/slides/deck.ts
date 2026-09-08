@@ -1,5 +1,6 @@
 import { graphPresentationSteps, gridSteps } from "../dijkstra/snapshots";
 import { chapters } from "./chapters";
+import { javaSteps } from "./code";
 
 export type SlideDefinition = {
   id: string;
@@ -148,8 +149,8 @@ const contentSlides = [
     id: "java",
     section: "03",
     sectionName: "다익스트라 알고리즘",
-    title: "눈으로 본 움직임을 Java 코드로 연결한다",
-    steps: 6,
+    title: "Java 코드로 보는 다익스트라",
+    steps: javaSteps.length,
   },
   {
     id: "transform",

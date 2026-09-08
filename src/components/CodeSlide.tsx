@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
 import {
-  JAVA_TEMPLATE,
+  javaSections,
+  javaSteps,
   GRID_CODE,
-  javaFocus,
   gridFocus,
-  javaNotes,
   gridNotes,
 } from "../slides/code";
 
@@ -13,7 +12,7 @@ function Tokens({ line }: { line: string }) {
     <>
       {line
         .split(
-          /(\b(?:int|for|if|while|continue|new)\b|\b(?:dist|pq|map|nextCost|cur|edge)\b|\b\d+\b)/g,
+          /(\b(?:int|for|if|while|continue|new)\b|\b(?:dist|distance|pq|map|graph|now|currentDistance|nextNode|newDistance|nextCost|cur|edge)\b|\b\d+\b)/g,
         )
         .map((part, i) => (
           <span
@@ -21,7 +20,7 @@ function Tokens({ line }: { line: string }) {
             className={
               /^(int|for|if|while|continue|new)$/.test(part)
                 ? "syntax-keyword"
-                : /^(dist|pq|map|nextCost)$/.test(part)
+                : /^(dist|distance|pq|map|graph|now|currentDistance|nextNode|newDistance|nextCost)$/.test(part)
                   ? "syntax-variable"
                   : /^\d+$/.test(part)
                     ? "syntax-number"
@@ -41,15 +40,17 @@ export function CodeSlide({
   step: number;
   grid?: boolean;
 }) {
-  const code = grid ? GRID_CODE : JAVA_TEMPLATE,
-    focus = (grid ? gridFocus : javaFocus)[step],
-    note = (grid ? gridNotes : javaNotes)[step];
+  const javaStep = javaSteps[step],
+    section = grid ? undefined : javaSections[javaStep.section],
+    code = grid ? GRID_CODE : section!.code,
+    focus = grid ? gridFocus[step] : javaStep.focus,
+    note = grid ? gridNotes[step] : javaStep.note;
   return (
-    <div className="code-layout">
+    <div className={`code-layout ${grid ? "" : "java-code-layout"}`}>
       <div className="code-surface">
         <div className="code-heading">
           <span>Java</span>
-          <span>{grid ? "SWEA 1249" : "Dijkstra"}</span>
+          <span>{grid ? "SWEA 1249" : `${javaStep.section + 1} / 3 · ${section!.title}`}</span>
         </div>
         <pre>
           <code>
@@ -79,6 +80,7 @@ export function CodeSlide({
         <h2>{note[1]}</h2>
         <p className="mono blue">{note[2]}</p>
         <p>{note[3]}</p>
+        {!grid && <div className="code-footnote">solution(n, start, roads) 핵심 발췌</div>}
         {grid && (
           <div className="code-footnote">
             PQ는 cost 오름차순

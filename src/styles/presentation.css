@@ -1467,6 +1467,9 @@ code {
   border-radius: 12px;
   overflow: hidden;
 }
+.java-code-layout .code-surface {
+  min-height: 724px;
+}
 .code-heading {
   display: flex;
   justify-content: space-between;

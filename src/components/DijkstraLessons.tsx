@@ -109,11 +109,11 @@ export function StaleLesson({ step }: { step: number }) {
           "작은 비용의 후보부터 처리한다. 다음으로 (4, 5)를 꺼낼 차례다.",
         ][step]}</p> : step === 3 ? <>
           <strong className="blue">poll() 결과: (4, 5)</strong>
-          <code>cur.cost &gt; dist[cur.node] ?</code>
+          <code>currentDistance &gt; distance[now] ?</code>
           <p>다음 단계에서 5와 4를 비교한다.</p>
         </> : <>
           <strong>꺼낸 비용 5 &gt; 현재 dist[4] = 4</strong>
-          <code>if (cur.cost &gt; dist[cur.node]) continue;</code>
+          <code>if (currentDistance &gt; distance[now]) continue;</code>
           <p className="stale-verdict">오래된 후보 · 건너뛰기</p>
         </>}
       </div>
