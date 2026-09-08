@@ -56,7 +56,7 @@ export function CodeSlide({
             {code.map((line, i) => (
               <div
                 key={i}
-                className={`code-line ${i >= focus[0] && i <= focus[1] ? "code-active" : ""}`}
+                className={`code-line ${line === "" ? "code-line-empty" : ""} ${i >= focus[0] && i <= focus[1] ? "code-active" : ""}`}
               >
                 <span className="line-number">
                   {String(i + 1).padStart(2, "0")}

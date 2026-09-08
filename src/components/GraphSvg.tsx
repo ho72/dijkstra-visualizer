@@ -125,20 +125,20 @@ export function GraphSvg({
               style={{ transformOrigin: `${x}px ${y}px` }}
             >
               <rect
-                x={x - 20}
-                y={y - 19}
-                width="40"
-                height="37"
+                x={x - 25}
+                y={y - 25}
+                width="50"
+                height="48"
                 rx="7"
                 fill="var(--paper)"
               />
               <text
                 x={x}
-                y={y + 8}
+                y={y + 11}
                 textAnchor="middle"
-                fontSize="26"
+                fontSize="34"
                 fontWeight="500"
-                fill={active || onPath ? colors[state] : "#6e7e92"}
+                fill={active || onPath ? colors[state] : "#52657e"}
               >
                 {edge.cost}
               </text>
@@ -177,13 +177,19 @@ export function GraphSvg({
         return (
           <g key={node} data-node={node}>
             {showDist && (
-              <g className="node-dist">
+              <g
+                className="node-dist"
+                paintOrder="stroke"
+                stroke="var(--paper)"
+                strokeWidth="5"
+                strokeLinejoin="round"
+              >
                 <text
                   x={x}
-                  y={y - 87}
+                  y={y - 102}
                   textAnchor="middle"
-                  fontSize="17"
-                  fill="#8392a6"
+                  fontSize="27"
+                  fill="#5e728e"
                 >
                   dist[{node}]
                 </text>
@@ -191,9 +197,9 @@ export function GraphSvg({
                   <motion.text
                     key={snapshot?.dist[node] ?? "inf"}
                     x={x}
-                    y={y - 58}
+                    y={y - 66}
                     textAnchor="middle"
-                    fontSize="28"
+                    fontSize="36"
                     fill={changed ? "#16815b" : "#2968dd"}
                     fontFamily="var(--mono)"
                     initial={{ opacity: 0, y: 8 }}
@@ -231,7 +237,7 @@ export function GraphSvg({
                 x={x}
                 y={y + 13}
                 textAnchor="middle"
-                fontSize="38"
+                fontSize="42"
                 fontWeight="700"
                 fill={ink}
               >
@@ -239,17 +245,21 @@ export function GraphSvg({
               </text>
             </motion.g>
             {settled && !current && (
-              <text x={x + 47} y={y + 42} fill="#527397" fontSize="20">
+              <text x={x + 47} y={y + 42} fill="#527397" fontSize="26">
                 ✓
               </text>
             )}
             {current && (
               <text
                 x={x}
-                y={y + 80}
+                y={y + 90}
                 fill="#2968dd"
-                fontSize="18"
+                fontSize="28"
                 textAnchor="middle"
+                paintOrder="stroke"
+                stroke="var(--paper)"
+                strokeWidth="5"
+                strokeLinejoin="round"
               >
                 현재 정점
               </text>

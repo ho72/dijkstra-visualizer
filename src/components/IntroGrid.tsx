@@ -37,7 +37,7 @@ export function IntroGrid() {
             : onPath
               ? "#e3edfd"
               : "#f0f4f8",
-        foreground: start || goal ? "#283749" : onPath ? "#2866cf" : "#a7b4c4",
+        foreground: start || goal ? "#283749" : onPath ? "#2866cf" : "#6c7e95",
       };
     }),
   );
@@ -100,21 +100,21 @@ export function IntroGrid() {
           strokeWidth="8"
           strokeLinejoin="round"
           paintOrder="stroke"
-          fontSize="29"
+          fontSize="34"
           fontWeight="600"
         >
           {label}
         </text>
       ))}
-      <text x="80" y="632" fontSize="18" fill="#7d8da2" fontFamily="monospace">
+      <text x="80" y="632" fontSize="25" fill="#5f738f" fontFamily="monospace">
         S (0, 0)
       </text>
       <text
         x="588"
         y="632"
         textAnchor="end"
-        fontSize="18"
-        fill="#7d8da2"
+        fontSize="25"
+        fill="#5f738f"
         fontFamily="monospace"
       >
         G (N−1, N−1)

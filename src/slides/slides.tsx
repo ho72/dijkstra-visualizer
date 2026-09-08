@@ -1,6 +1,5 @@
 import { IntroGrid } from "../components/IntroGrid";
 import { lazy, Suspense, useState } from "react";
-import { motion } from "framer-motion";
 import { GraphSvg } from "../components/GraphSvg";
 import { GridSvg } from "../components/GridSvg";
 import {
@@ -49,13 +48,6 @@ export const slides = [
     sectionName: "문제 이해",
     title: "S에서 G까지, 파손된 도로를 복구해야 한다",
     steps: 1,
-  },
-  {
-    id: "depth",
-    section: "01",
-    sectionName: "문제 이해",
-    title: "도로의 파손 깊이가 곧 복구 시간이다",
-    steps: 3,
   },
   {
     id: "rules",
@@ -284,7 +276,7 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
         </div>
       </div>
     );
-  if (id === "problem" || id === "depth")
+  if (id === "problem")
     return (
       <div className="road-content">
         <div className="road-figure">
@@ -292,28 +284,14 @@ export function SlideContent({ id, step }: { id: string; step: number }) {
             src={roadImage}
             alt="파손 깊이가 1, 2, 3인 도로 단면과 각각의 복구 시간 1, 2, 3"
           />
-          {id === "depth" && (
-            <motion.div
-              className="depth-focus"
-              animate={{ left: `${19.6 + step * 26.5}%` }}
-              transition={{ duration: 0.4 }}
-            />
-          )}
         </div>
         <p>
-          {id === "depth" ? (
-            <>
-              파손 깊이 <strong>{step + 1}</strong>
-              <span className="muted">=</span>복구 시간{" "}
-              <strong>{step + 1}</strong>
-            </>
-          ) : (
-            <>
-              출발지 <b className="start-text">S</b>
-              <span className="route-line" />
-              도착지 <b className="goal-text">G</b>
-            </>
-          )}
+          출발지 <b className="start-text">S</b>
+          <span className="route-line" aria-label="에서" />
+          도착지 <b className="goal-text">G</b>
+        </p>
+        <p className="depth-equation">
+          파손 깊이 <span>=</span> <strong>복구 시간</strong>
         </p>
       </div>
     );

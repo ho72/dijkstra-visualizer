@@ -69,8 +69,8 @@ export function GridSvg({
             x={168 + i * 182}
             y="42"
             textAnchor="middle"
-            fill="#8c9baf"
-            fontSize="22"
+            fill="#637792"
+            fontSize="28"
           >
             {i}
           </text>
@@ -78,8 +78,8 @@ export function GridSvg({
             x="43"
             y={153 + i * 182}
             textAnchor="middle"
-            fill="#8c9baf"
-            fontSize="22"
+            fill="#637792"
+            fontSize="28"
           >
             {i}
           </text>
@@ -193,10 +193,10 @@ export function GridSvg({
               {reveal >= 1 && !graph && (n === 0 || n === 8) && (
                 <text
                   x={x - 53}
-                  y={y - 45}
+                  y={y - 43}
                   fill={n === 0 ? "#987018" : "#b65c51"}
                   fontWeight="700"
-                  fontSize="20"
+                  fontSize="27"
                 >
                   {n === 0 ? "S" : "G"}
                 </text>
@@ -207,7 +207,7 @@ export function GridSvg({
                   y={y + 12}
                   textAnchor="middle"
                   fill={color}
-                  fontSize={graph ? 27 : 39}
+                  fontSize={graph ? 34 : 43}
                   fontWeight="500"
                 >
                   {wave >= 0 ? r + c : cost}
@@ -217,10 +217,10 @@ export function GridSvg({
                 <>
                   <text
                     x={x}
-                    y={y - 25}
+                    y={y - 12}
                     textAnchor="middle"
-                    fill={isCurrent ? "#e0ebff" : "#8898ab"}
-                    fontSize="17"
+                    fill={isCurrent ? "#e0ebff" : "#5f738d"}
+                    fontSize="25"
                   >
                     칸 비용 {cost}
                   </text>
@@ -228,12 +228,12 @@ export function GridSvg({
                     <motion.text
                       key={snapshot?.dist[n] ?? "inf"}
                       x={x}
-                      y={y + 24}
+                      y={y + 31}
                       textAnchor="middle"
                       fill={
                         isCurrent ? "white" : updated ? "#16815b" : "#2968dd"
                       }
-                      fontSize="40"
+                      fontSize="44"
                       fontFamily="var(--mono)"
                       initial={{ opacity: 0, y: 9 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -245,17 +245,17 @@ export function GridSvg({
                 </>
               )}
               {snapshot?.settled.includes(n) && !isCurrent && !graph && (
-                <text x={x + 49} y={y + 53} fill="#718bab" fontSize="20">
+                <text x={x + 49} y={y + 57} fill="#526e91" fontSize="25">
                   ✓
                 </text>
               )}
               {isCurrent && !graph && (
                 <text
                   x={x}
-                  y={y + 57}
+                  y={y + 61}
                   textAnchor="middle"
                   fill="white"
-                  fontSize="16"
+                  fontSize="22"
                 >
                   현재 위치
                 </text>
@@ -327,7 +327,7 @@ export function GridSvg({
               />
             );
           })}
-      <text x="350" y="646" textAnchor="middle" fontSize="20" fill="#8292a7">
+      <text x="350" y="646" textAnchor="middle" fontSize="28" fill="#5c718e">
         {showDist
           ? "큰 숫자 = 현재 dist"
           : wave >= 0

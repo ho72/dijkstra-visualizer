@@ -84,14 +84,14 @@ export function Counterexample({ step }: { step: number }) {
             </text>
           </motion.g>
         ))}
-        <text x="750" y="31" textAnchor="middle" fontSize="23" fill="#ad7839">
+        <text x="750" y="31" textAnchor="middle" fontSize="30" fill="#95601f">
           경로 A
         </text>
         <text
           x="750"
           y="390"
           textAnchor="middle"
-          fontSize="23"
+          fontSize="30"
           fill="#2968dd"
           opacity={step >= 1 ? 1 : 0.12}
         >
