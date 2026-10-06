@@ -19,8 +19,8 @@ SSAFY 16기 광주 4반에서 SWEA 1249 「보급로」 문제를 설명하기 �
 Node.js와 npm이 설치된 환경에서 실행합니다.
 
 ```bash
-git clone https://github.com/ho72/Dijkstra_ppt.git
-cd Dijkstra_ppt
+git clone https://github.com/ho72/dijkstra-visualizer.git
+cd dijkstra-visualizer
 npm ci
 npm run dev
 ```
